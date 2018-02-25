@@ -5,22 +5,35 @@ import App from './App.vue'
 import Products from './components/Products.vue'
 import Cart from './components/Cart.vue'
 
+import VueCurrencyFilter from 'vue-currency-filter'
 Vue.use(VueRouter)
+
+
+Vue.use(VueCurrencyFilter, {
+    symbol: '€',
+    thousandsSeparator: '.',
+    fractionCount: 2,
+    fractionSeparator: ',',
+    symbolPosition: 'front',
+    symbolSpacing: true
+})
+
 
 // Define routes
 const routes = [
-  { path: '/', component: Products },
-  { path: '/cart', component: Cart }
+    { path: '/', component: Products },
+    { path: '/cart', component: Cart }
 ]
 
 // Register routes
 const router = new VueRouter({
-  routes
+    routes
 })
 
 new Vue({
-  el: '#app',
-  render: h => h(App),
-  router,
-  store
+    el: '#app',
+    render: h => h(App),
+    router,
+    store,
+
 })

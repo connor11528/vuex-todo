@@ -1,6 +1,7 @@
 <template>
-	<nav class="nav has-shadow" style='box-shadow: 0 1px 0 rgba(219,219,219,.3);'>
-	  <div class="nav-left">
+<header>
+	<nav class="navbar is-fixed-top has-shadow" style='box-shadow: 0 1px 0 rgba(219,219,219,.3);'>
+	  <div class="navbar-brand">
 	    <router-link to="/" class="nav-item">
 	      <img src="../assets/logo.png" alt="Bulma logo">
 	    </router-link>
@@ -8,7 +9,7 @@
 
 	  <!-- This "nav-toggle" hamburger menu is only visible on mobile -->
 	  <!-- You need JavaScript to toggle the "is-active" class on "nav-menu" -->
-	  <span class="nav-toggle">
+	  <span class="navbar-burger burger"  data-target="mainNav" @click="showNav = !showNav" :class="{ 'is-active' : showNav }">
 	    <span></span>
 	    <span></span>
 	    <span></span>
@@ -16,15 +17,16 @@
 
 	  <!-- This "nav-menu" is hidden on mobile -->
 	  <!-- Add the modifier "is-active" to display it on mobile -->
-	  <div class="nav-right nav-menu">
-	    <router-link to="/" class="nav-item is-tab" exact-active-class="is-active">
+	  <div class="navbar-menu" id='mainNav' v-bind:class="{ 'is-active' : showNav }">
+			 <div class="navbar-end">
+	    <router-link to="/" class="nav-item " exact-active-class="is-active">
 	      Shop
 	    </router-link>
 
-	    <div class="nav-item is-tab" :class="{ 'active-bottom-border': $route.path === '/cart' }">
+	    <div class="nav-item " :class="{ 'active-bottom-border': $route.path === '/cart' }">
 	      <div class="field is-grouped">
 	        <p class="control">
-	          <router-link to='/cart' class="button is-info">
+	          <router-link to='/cart' class="button is-info" >
 	            <span class="icon">
 	              <i class="fa fa-shopping-cart"></i>
 	            </span>
@@ -32,17 +34,26 @@
 	          </router-link>
 	        </p>
 	      </div>
+	      </div>
 	    </div>
 	  </div>
 	</nav>
+
+	</header>
 </template>
 
 <style lang="scss">
-.nav {
+.navbar {
 	height: auto;
 	margin-bottom: 2rem;
+	display: flex;
+	flex-flow: row wrap;
+
+.navbar-menu {
+	width: 100%;
 }
 
+}
 .nav-item img {
     max-height: 3.5rem;
 }
@@ -55,14 +66,22 @@
 </style>
 
 <script>
-import { mapGetters } from 'vuex'
+
+import { mapGetters, mapActions } from 'vuex'
+import store from '../store/index.js'
 
 export default {
+	data(){
+		return {
+			showNav: false
+		}
+	},
 	computed: {
 		itemsInCart(){
 			let cart = this.$store.getters.cartProducts;
 			return cart.reduce((accum, item) => accum + item.quantity, 0)
-		}
-	}
+		},
+	},
+
 }
 </script>
