@@ -6,8 +6,8 @@
           {{ category }} ( {{ categoryCount(category).length }} )
         </button>
     </div>
-		<div class="columns is-multiline is-mobile">
-      <div class="card column is-12-mobile is-4-tablet "  v-for="link in filteredLinks" :key="link.id" :class="{current: selectedCategory == link.category }">
+		<div class="columns is-multiline is-mobile is-variable">
+      <div class="card column is-12-phone is-6-mobile is-4-tablet is-4-desktop"  v-for="link in filteredLinks" :key="link.id" :class="{current: selectedCategory == link.category }">
         <div class="card-image">
           <figure class="image is-4by3">
             <img :src="link.image" :alt="link.product">
@@ -58,6 +58,7 @@ export default {
   name: "Products",
   created() {
     this.$store.dispatch("fetchProducts", { self: this });
+    this.selectedCategory = this.getCategories[0];
   },
   computed: {
     ...mapGetters({
@@ -113,6 +114,15 @@ export default {
 <style lang="scss">
 .columns {
   margin-top: 2rem;
+  margin-left: calc(-1 * 0.75rem);
+  margin-right: calc(-1 * 0.75rem);
+  justify-content: center;
+}
+.column {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding-left: 0.75rem;
+  padding-right: 1 * 0.75rem;
 }
 .card {
   display: flex;
@@ -124,6 +134,15 @@ export default {
 .section {
   padding-top: 6rem;
 }
+@media screen and(max-width: 576px) {
+  .column.is-12-phone {
+    -webkit-box-flex: 0;
+    -ms-flex: none;
+    flex: none;
+    width: 100%;
+  }
+}
+
 .input {
   width: 50px;
   margin-left: 0;
