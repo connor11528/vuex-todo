@@ -22,6 +22,7 @@ npm install
 
 # serve with hot reload at localhost:8080
 npm run dev
+
 json-server generate.js (to run a local API builder from the generate.js file)
 
 # build for production with minification

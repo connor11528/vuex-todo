@@ -70,16 +70,13 @@ export default {
   methods: {
     checkout() {
       alert("Pay us $" + this.total);
-    },
-    closemodal() {
-      // var modal = document.getElementById("modal");
-      // modal.classList.remove("is-active");
-      this.$emit("hide");
+      return this.resetVersion();
     },
     ...mapActions({
       removeItem: "removeItem",
       decreaseItem: "decreaseItem",
-      increaseItem: "increaseItem"
+      increaseItem: "increaseItem",
+      resetVersion: "resetVersion"
     })
   }
 };
