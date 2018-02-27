@@ -10,7 +10,8 @@ function generateProducts() {
       category: faker.commerce.department(),
       price: faker.commerce.price(),
       image: faker.image.avatar(),
-      quantity: 1
+      quantity: 1,
+      addedToCart: false
     });
   }
   return { products: products };

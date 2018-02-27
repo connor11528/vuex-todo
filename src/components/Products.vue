@@ -50,68 +50,64 @@
 </template>
 
 <script>
-import { mapGetters, mapActions, mapMutations } from 'vuex'
-import store from '../store/index.js'
-import NumberInput from './NumberInput.vue'
+import { mapGetters, mapActions, mapMutations } from "vuex";
+import store from "../store/index.js";
+import NumberInput from "./NumberInput.vue";
 
 export default {
-  name: 'Products',
-	created() {
-		this.$store.dispatch("fetchProducts", { self: this })
-
-	},
-  computed: { 
-		...mapGetters({
-    products: 'allProducts',
-    length: 'getNumberOfProducts',	
-   }),
-  // expectedQuantity: {
-  //   get () {
-  //   return this.$store.state.added.quantity
-  //   },
-  //   set (value, item) {
-  //     this.$store.commit('updateMessage', value, item.id)
-  //   }
-  // },
-  filteredLinks() {
-    return this.$store.getters.filteredLinks(this.selectedCategory);
+  name: "Products",
+  created() {
+    this.$store.dispatch("fetchProducts", { self: this });
   },
-  getCategories() {
+  computed: {
+    ...mapGetters({
+      products: "allProducts",
+      length: "getNumberOfProducts"
+    }),
+    // expectedQuantity: {
+    //   get () {
+    //   return this.$store.state.added.quantity
+    //   },
+    //   set (value, item) {
+    //     this.$store.commit('updateMessage', value, item.id)
+    //   }
+    // },
+    filteredLinks() {
+      return this.$store.getters.filteredLinks(this.selectedCategory);
+    },
+    getCategories() {
       let categoriesSet = new Set();
       this.$store.state.all.forEach(link => {
-          categoriesSet.add(link.category);
-      })
-      return this.categories = Array.from(categoriesSet)
-  },  
-  categlength() {
-    return (this.categories) ? this.categories.length : 0
+        categoriesSet.add(link.category);
+      });
+      return (this.categories = Array.from(categoriesSet));
+    },
+    categlength() {
+      return this.categories ? this.categories.length : 0;
+    }
   },
-  
-   
-	},
   methods: {
     categoryCount(category) {
       return this.products.filter(link => {
         return link.category.match(category);
       });
     },
-		...mapActions({
-      addToCart: 'addToCart',
+    ...mapActions({
+      addToCart: "addToCart"
       // decreaseItem: 'decreaseItem',
-			// increaseItem: 'increaseItem'
-    }),
+      // increaseItem: 'increaseItem'
+    })
   },
-	data () {
-		return {
-			selectedCategory: '',
+  data() {
+    return {
+      selectedCategory: "",
       categories: []
-		}
-	},
- components: {
-   NumberInput
- }
-
-}
+    };
+  },
+  components: {
+    NumberInput
+  }
+};
 </script>
 
 <style lang="scss">
@@ -125,14 +121,17 @@ export default {
 .card-footer {
   margin-top: auto;
 }
+.section {
+  padding-top: 6rem;
+}
 .input {
   width: 50px;
   margin-left: 0;
   margin-right: 0;
 }
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 </style>
