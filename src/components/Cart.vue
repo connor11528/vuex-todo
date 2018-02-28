@@ -44,9 +44,11 @@
     </section>
     <footer class="modal-card-foot">
       <button v-show="products.length" class="button is-success"  @click.prevent.stop="checkout()">Make payment</button>
-      <button v-show="products.length" class="button"  @click.prevent.stop="closemodal()">	
-					<router-link to="/"> Continue Shopping	</router-link>
-			</button>
+			<router-link to="/">
+        <button v-show="products.length" class="button" >	
+          Continue Shopping	
+			  </button>
+      </router-link>
     </footer>
   </div>
 

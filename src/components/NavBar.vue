@@ -3,7 +3,10 @@
 	<nav class="navbar if-fixed has-shadow" >
 	  <div class="navbar-brand">
 	    <router-link to="/" class="nav-item">
-	      <img src="../assets/Huozhi_logo.png" alt="Bulma logo">
+	      <img srcset="/static/logo@1x.png ,
+                   /static/logo@2x.png 2x,
+                   /static/logo@3x.png 3x"
+            src="/static/logo@3x.png" alt="Secure Aid Logo">
 	    </router-link>
 	  </div>
 	  <div class="navbar-menu is-active" id='mainNav' >
@@ -13,7 +16,7 @@
 	        <p class="control">
 	          <router-link to='/cart' class="button is-info" >
 	            <span class="icon">
-	              <i class="fa fa-shopping-cart"></i>
+              <object data="/static/shopping-cart.svg" type="image/svg+xml"></object>
 	            </span>
 	            <span> ({{itemsInCart}})</span>
 	          </router-link>
@@ -61,12 +64,6 @@ nav {
 .nav-item img {
   max-height: 3.5rem;
 }
-
-// .active-bottom-border {
-//   border-bottom: 3px solid #00d1b2;
-//   color: #00d1b2;
-//   padding-bottom: calc(0.75rem - 8px);
-// }
 </style>
 
 <script>

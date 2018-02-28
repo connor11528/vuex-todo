@@ -65,14 +65,6 @@ export default {
       products: "allProducts",
       length: "getNumberOfProducts"
     }),
-    // expectedQuantity: {
-    //   get () {
-    //   return this.$store.state.added.quantity
-    //   },
-    //   set (value, item) {
-    //     this.$store.commit('updateMessage', value, item.id)
-    //   }
-    // },
     filteredLinks() {
       return this.$store.getters.filteredLinks(this.selectedCategory);
     },

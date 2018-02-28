@@ -6,19 +6,26 @@
 </template>
 
 <script>
-import NavBar from './components/NavBar.vue'
-import { mapActions } from 'vuex';
-
+import NavBar from "./components/NavBar.vue";
+import { mapActions } from "vuex";
+// not sure we need the whole font-awesome when we could use the fontawesome - svg-png from github already
+// require('../node_modules/@fortawesome/fontawesome-free-regular')
+// require('../node_modules/@fortawesome/fontawesome-common-types')
 export default {
-  name: 'app',
+  name: "app",
   components: {
-  	NavBar
+    NavBar
   },
-  data () {
-    return {}
+  data() {
+    return {};
   },
-  methods: {
-  
-}
-}
+  methods: {}
+};
 </script>
+<style>
+@import "../node_modules/bulma/css/bulma.css";
+object {
+  pointer-events: none;
+}
+</style>
+

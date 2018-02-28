@@ -23,8 +23,19 @@ npm install
 # serve with hot reload at localhost:8080
 npm run dev
 
+# using faker we can generate a fake API so we can use for dev
+
 json-server generate.js (to run a local API builder from the generate.js file)
+
 
 # build for production with minification
 npm run build
 ```
+
+### Deployment
+
+To deploy the project, you would have to do the following:
+
+* run the build command
+* copy the index.html file, statc and dist folders to your webserver
+* project is kind of live
