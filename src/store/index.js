@@ -39,6 +39,7 @@ const actions = {
     commit(types.ADD_TO_CART, {
       id: product.id
     });
+    commit("initialiseStore");
   },
   fetchProducts({ commit }) {
     fetch("http://localhost:3000/products")
@@ -55,6 +56,7 @@ const actions = {
     commit(types.REMOVE_ITEM, {
       id: product.id
     });
+    commit(initialiseStore());
   },
   increaseItem({ commit }, product) {
     commit(types.INCREASE_ITEM, {
