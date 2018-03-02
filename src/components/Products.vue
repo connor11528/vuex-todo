@@ -2,7 +2,7 @@
 	<div class='section'>
 		<h1 class="subtitle">{{ categlength }} Categories</h1>
     <div class="categories">
-        <button class="button" v-for="category in getCategories" :key="category.id"  @click="selectedCategory = category" :class="{ 'is-primary': selectedCategory == category }">
+        <button class="button" v-for="category in getCategories" :key="category.id"  @click="selectedCategory = category" :class="{ 'is-dark is-outlined': selectedCategory == category }">
           {{ category }} ( {{ categoryCount(category).length }} )
         </button>
     </div>
@@ -17,9 +17,6 @@
           <div class="title">
             {{ link.product }} 
           </div>
-          <div class="subtitle">
-            {{ link.description }}
-          </div>
         </div>
         <footer class="card-footer">
           <p class="card-footer-item">
@@ -27,20 +24,8 @@
               {{ link.price | currency }}
             </span>
           </p>
-          <!-- <p class="card-footer-item">
-            <span class="buttons">
-
-              <NumberInput
-                :min="0"
-                :max="10"
-                :step="1"
-                :integerOnly="true"
-                v-model.number="link.quantity"
-              />
-            </span>
-          </p> -->
           <p class="card-footer-item">
-            <a @click.prevent.stop="addToCart(link)" class="button  addtocart" href="#">Add To Cart</a>
+            <a @click.prevent.stop="addToCart(link)" class="button is-dark is-outlined " href="#">Add To Cart</a>
           </p>
         </footer>
       </div>
@@ -87,8 +72,6 @@ export default {
     },
     ...mapActions({
       addToCart: "addToCart"
-      // decreaseItem: 'decreaseItem',
-      // increaseItem: 'increaseItem'
     })
   },
   data() {
@@ -104,12 +87,6 @@ export default {
 </script>
 
 <style lang="scss">
-.columns {
-  margin-top: 2rem;
-  margin-left: calc(-1 * 0.75rem);
-  margin-right: calc(-1 * 0.75rem);
-  justify-content: center;
-}
 .column {
   margin-top: 1rem;
   margin-bottom: 1rem;
@@ -123,9 +100,7 @@ export default {
 .card-footer {
   margin-top: auto;
 }
-.section {
-  padding-top: 6rem;
-}
+
 @media screen and(max-width: 576px) {
   .column.is-12-phone {
     -webkit-box-flex: 0;

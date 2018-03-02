@@ -56,7 +56,6 @@ const actions = {
     commit(types.REMOVE_ITEM, {
       id: product.id
     });
-    commit(initialiseStore());
   },
   increaseItem({ commit }, product) {
     commit(types.INCREASE_ITEM, {

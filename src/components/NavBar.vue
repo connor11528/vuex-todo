@@ -1,24 +1,24 @@
 <template>
 <header>
-	<nav class="navbar if-fixed has-shadow" >
+	<nav class="navbar if-fixed has-shadow is-dark" >
 	  <div class="navbar-brand">
 	    <router-link to="/" class="nav-item">
-	      <img srcset="/static/logo@1x.png ,
-                   /static/logo@2x.png 2x,
-                   /static/logo@3x.png 3x"
-            src="/static/logo@3x.png" alt="Secure Aid Logo">
+	      <img srcset="/static/inverse-slim.png ,
+                   /static/inverse-slim@2x.png 2x,
+                   /static/inverse-slim@3x.png 3x"
+            src="/static/inverse-slim@3x.png" alt="Secure Aid Logo">
 	    </router-link>
 	  </div>
-	  <div class="navbar-menu is-active" id='mainNav' >
+	  <div class="navbar-menu " id='mainNav' >
 			<div class="navbar-end">
-	    <div class="nav-item " :class="{ 'active-bottom-border': $route.path === '/cart' }">
+	    <div class="nav-item" >
 	      <div class="field is-grouped">
 	        <p class="control">
-	          <router-link to='/cart' class="button is-info" >
+	          <router-link to='/cart' class="button is-dark is-inverted is-outlined" >
 	            <span class="icon">
               <object data="/static/shopping-cart.svg" type="image/svg+xml"></object>
 	            </span>
-	            <span> ({{itemsInCart}})</span>
+	            <span> {{total | currency}}</span>
 	          </router-link>
 	        </p>
 	      </div>
@@ -45,24 +45,34 @@ nav {
 }
 .navbar {
   height: auto;
-  margin-bottom: 2rem;
+  // margin-bottom: 2rem;
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
+  align-items: center;
 
   .navbar-menu {
     width: auto;
     box-shadow: none;
+    display: block;
+    background: #363636;
   }
 
   .nav-item {
+    align-self: center;
+    height: auto;
     .field.is-grouped {
       justify-content: center;
     }
   }
 }
 .nav-item img {
-  max-height: 3.5rem;
+  max-height: 2rem;
+}
+
+.icon svg:hover path,
+.icon svg:focus path {
+  fill: #220b0b;
 }
 </style>
 
@@ -77,9 +87,17 @@ export default {
     };
   },
   computed: {
+    ...mapGetters({
+      products: "cartProducts"
+    }),
     itemsInCart() {
       let cart = this.$store.getters.cartProducts;
       return cart.reduce((accum, item) => accum + item.quantity, 0);
+    },
+    total() {
+      return this.products.reduce((total, p) => {
+        return total + p.price * p.quantity;
+      }, 0);
     }
   }
 };

@@ -10,9 +10,9 @@ Vue.use(VueRouter);
 
 Vue.use(VueCurrencyFilter, {
   symbol: "€",
-  thousandsSeparator: ".",
+  thousandsSeparator: ",",
   fractionCount: 2,
-  fractionSeparator: ",",
+  fractionSeparator: ".",
   symbolPosition: "front",
   symbolSpacing: true
 });
@@ -29,9 +29,8 @@ const router = new VueRouter({
 });
 
 store.subscribe((mutation, state) => {
-  localStorage.setItem("store", JSON.stringify(state));
+  window.localStorage.setItem("store", JSON.stringify(state));
 });
-
 new Vue({
   el: "#app",
   render: h => h(App),
