@@ -1,12 +1,12 @@
 <template>
-	<div class='section'>
+	<div class='content main-content'>
 		<h1 class="subtitle">{{ categlength }} Categories</h1>
     <div class="categories">
-        <button class="button" v-for="category in getCategories" :key="category.id"  @click="selectedCategory = category" :class="{ 'is-dark is-outlined': selectedCategory == category }">
+        <button class="button" v-for="category in getCategories" :key="category.id"  @click="selectedCategory = category" :class="{ 'is-gray': selectedCategory == category }">
           {{ category }} ( {{ categoryCount(category).length }} )
         </button>
     </div>
-		<div class="columns is-multiline is-mobile is-variable">
+		<div class="columns is-multiline is-mobile no-padding">
       <div class="card column is-12-phone is-6-mobile is-4-tablet is-4-desktop"  v-for="link in filteredLinks" :key="link.id" :class="{current: selectedCategory == link.category }">
         <div class="card-image">
           <figure class="image is-4by3">
@@ -25,12 +25,16 @@
             </span>
           </p>
           <p class="card-footer-item">
-            <a @click.prevent.stop="addToCart(link)" class="button is-dark is-outlined " href="#">Add To Cart</a>
+            <a @click.prevent.stop="()=>{addToCart(link); }" class="button is-gray" href="#">Add To Cart</a>
           </p>
+          <!-- <p class="card-footer-item" >
+            <button @click="decreaseItem(link)"  class="button is-small" >-</button>
+              <span >{{ cartItems[link].quantity }}</span>
+            <button @click="addToCart(link)" class="button is-small" >+</button>
+          </p> -->
         </footer>
       </div>
     </div>
-
 	</div>
 </template>
 
@@ -43,12 +47,15 @@ export default {
   name: "Products",
   created() {
     this.$store.dispatch("fetchProducts", { self: this });
-    this.selectedCategory = this.getCategories[0];
+  },
+  mounted() {
+    this.initialcateg;
   },
   computed: {
     ...mapGetters({
       products: "allProducts",
-      length: "getNumberOfProducts"
+      length: "getNumberOfProducts",
+      cartItems: "cartProducts"
     }),
     filteredLinks() {
       return this.$store.getters.filteredLinks(this.selectedCategory);
@@ -59,6 +66,11 @@ export default {
         categoriesSet.add(link.category);
       });
       return (this.categories = Array.from(categoriesSet));
+    },
+    initialcateg() {
+      setTimeout(() => {
+        return (this.selectedCategory = this.getCategories[0]);
+      }, 150);
     },
     categlength() {
       return this.categories ? this.categories.length : 0;
@@ -87,15 +99,51 @@ export default {
 </script>
 
 <style lang="scss">
+.main-content {
+  padding-top: 2rem;
+}
+.no-padding {
+  padding: 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+.columns {
+  margin-top: 1rem;
+  align-items: center;
+  justify-content: center;
+  .column {
+    margin-right: 2rem;
+    margin-left: 2rem;
+    padding-left: -1rem;
+    padding-right: -1rem;
+  }
+  figure {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
 .column {
   margin-top: 1rem;
   margin-bottom: 1rem;
-  padding-left: 0.75rem;
-  padding-right: 1 * 0.75rem;
 }
 .card {
   display: flex;
   flex-direction: column;
+}
+
+.button.is-gray {
+  border-color: whitesmoke;
+  background: rgb(53, 77, 91);
+  outline: none;
+  color: whitesmoke;
+  &:active,
+  &:focus {
+    border-color: whitesmoke;
+    background: rgb(53, 77, 91);
+    outline: none;
+    color: whitesmoke;
+  }
 }
 .card-footer {
   margin-top: auto;
@@ -110,6 +158,14 @@ export default {
   }
 }
 
+@media screen and (max-width: 768px) {
+  .columns {
+    .column {
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+}
 .input {
   width: 50px;
   margin-left: 0;

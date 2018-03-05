@@ -1,6 +1,6 @@
 <template>
 <header>
-	<nav class="navbar if-fixed has-shadow is-dark" >
+	<nav class="navbar if-fixed has-shadow is-gray" >
 	  <div class="navbar-brand">
 	    <router-link to="/" class="nav-item">
 	      <img srcset="/static/inverse-slim.png ,
@@ -9,12 +9,12 @@
             src="/static/inverse-slim@3x.png" alt="Secure Aid Logo">
 	    </router-link>
 	  </div>
-	  <div class="navbar-menu " id='mainNav' >
+	  <div class="navbar-menu is-gray " id='mainNav' >
 			<div class="navbar-end">
 	    <div class="nav-item" >
 	      <div class="field is-grouped">
 	        <p class="control">
-	          <router-link to='/cart' class="button is-dark is-inverted is-outlined" >
+	          <router-link to='/cart' class="button is-gray " >
 	            <span class="icon">
               <object data="/static/shopping-cart.svg" type="image/svg+xml"></object>
 	            </span>
@@ -43,6 +43,11 @@ nav {
   padding-right: 1rem;
   padding-top: 0.5rem;
 }
+.is-gray {
+  background-color: rgb(53, 77, 91);
+  color: whitesmoke;
+}
+
 .navbar {
   height: auto;
   // margin-bottom: 2rem;
@@ -55,17 +60,25 @@ nav {
     width: auto;
     box-shadow: none;
     display: block;
-    background: #363636;
-  }
-
-  .nav-item {
-    align-self: center;
-    height: auto;
-    .field.is-grouped {
-      justify-content: center;
-    }
+    padding-top: 0;
   }
 }
+.button.is-gray {
+  &:active,
+  &:focus {
+    border-color: whitesmoke;
+    background: lighten($color: rgb(53, 77, 91), $amount: 10%);
+    outline: none;
+  }
+}
+.nav-item {
+  align-self: center;
+  height: auto;
+  .field.is-grouped {
+    justify-content: center;
+  }
+}
+
 .nav-item img {
   max-height: 2rem;
 }

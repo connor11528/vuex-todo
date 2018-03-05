@@ -43,9 +43,9 @@
     </table>
     </section>
     <footer class="modal-card-foot">
-      <button v-show="products.length" class="button is-success"  @click.prevent.stop="checkout()">Make payment</button>
+      <button v-show="products.length" class="button is-payment"  @click="checkout()">Make payment</button>
 			<router-link to="/">
-        <button v-show="products.length" class="button" >	
+        <button v-show="products.length" class="button is-gray is-reverted is-outlined" >	
           Continue Shopping	
 			  </button>
       </router-link>
@@ -71,7 +71,7 @@ export default {
   },
   methods: {
     checkout() {
-      alert("Pay us $" + this.total);
+      alert("Pay us £" + this.total);
       return this.resetVersion();
     },
     ...mapActions({
@@ -83,6 +83,7 @@ export default {
   }
 };
 </script>
+
 <style lang="scss" scoped>
 .modal-card {
   padding-top: 4rem;
@@ -98,5 +99,9 @@ tbody td {
   img {
     width: 50px;
   }
+}
+.is-payment {
+  background-color: rgb(55, 178, 158);
+  color: whitesmoke;
 }
 </style>
