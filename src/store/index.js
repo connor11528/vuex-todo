@@ -18,16 +18,19 @@ const getters = {
   allProducts: state => state.all, // would need action/mutation if data fetched async
   getNumberOfProducts: state => (state.all ? state.all.length : 0),
   cartProducts: state => {
-    return state.added.map(({ id, quantity }) => {
-      const product = state.all.find(p => p.id === id);
-      return {
-        name: product.product,
-        price: product.price,
-        image: product.image,
-        id: product.id,
-        quantity
-      };
-    });
+    return state.added.map(
+      ({ id, quantity, name, price, image, description }) => {
+        const product = state.all.find(p => p.id === id);
+        return {
+          name: product.product,
+          price: product.price,
+          image: product.image,
+          description: product.description,
+          id: product.id,
+          quantity
+        };
+      }
+    );
   },
   filteredLinks: state => category =>
     state.all.filter(item => item.category === category)
@@ -39,10 +42,9 @@ const actions = {
     commit(types.ADD_TO_CART, {
       id: product.id
     });
-    commit("initialiseStore");
   },
   fetchProducts({ commit }) {
-    fetch("http://localhost:3000/products")
+    fetch("http://mac001:3000/products")
       .then(res => res.json())
       .then(data => {
         commit("FETCH_PRODUCTS", data);
@@ -52,11 +54,6 @@ const actions = {
       });
   },
 
-  removeItem({ commit }, product) {
-    commit(types.REMOVE_ITEM, {
-      id: product.id
-    });
-  },
   increaseItem({ commit }, product) {
     commit(types.INCREASE_ITEM, {
       id: product.id
@@ -69,11 +66,25 @@ const actions = {
   },
   resetVersion({ commit }) {
     commit("resetVersion", state);
+    commit("initialiseStore");
+  },
+  removeItem({ commit }, product) {
+    commit(types.REMOVE_ITEM, {
+      id: product.id
+    });
   }
 };
 
 // mutations
 const mutations = {
+  [types.REMOVE_ITEM](state, { id }) {
+    const record = state.added
+      .map(function(item) {
+        return item.id;
+      })
+      .indexOf(id);
+    state.added.splice(record, 1);
+  },
   [types.ADD_TO_CART](state, { id }) {
     const record = state.added.find(p => p.id === id);
     if (!record) {
@@ -88,10 +99,7 @@ const mutations = {
   [types.FETCH_PRODUCTS](state, all) {
     state.all = all;
   },
-  [types.REMOVE_ITEM](state, { id }) {
-    const record = state.added.find(p => p.id === id);
-    state.added.splice(record, 1);
-  },
+
   [types.INCREASE_ITEM](state, { id }) {
     const record = state.added.find(p => p.id === id);
     record.quantity++;

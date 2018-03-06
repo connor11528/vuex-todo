@@ -1,38 +1,48 @@
 <template>
 	<div class='content main-content'>
-		<h1 class="subtitle">{{ categlength }} Categories</h1>
+		<!-- <h1 class="subtitle">{{ categlength }} Categories</h1> -->
     <div class="categories">
         <button class="button" v-for="category in getCategories" :key="category.id"  @click="selectedCategory = category" :class="{ 'is-gray': selectedCategory == category }">
           {{ category }} ( {{ categoryCount(category).length }} )
         </button>
     </div>
 		<div class="columns is-multiline is-mobile no-padding">
-      <div class="card column is-12-phone is-6-mobile is-4-tablet is-4-desktop"  v-for="link in filteredLinks" :key="link.id" :class="{current: selectedCategory == link.category }">
-        <div class="card-image">
-          <figure class="image is-4by3">
-            <img :src="link.image" :alt="link.product">
-          </figure>
-        </div>
-        <div class="card-content">
-          <div class="title">
-            {{ link.product }} 
+      <div class="column is-6-phone is-6-mobile is-5-tablet is-4-desktop" v-for="link in filteredLinks" :key="link.id" :class="{current: selectedCategory == link.category }">
+        <div class="card">
+          <div class="card-image">
+            <figure class="image ">
+              <img  :src="link.image" :alt="link.product">
+            </figure>
           </div>
+          <div class="card-content">
+            <div class="title">
+              {{ link.product }} 
+            </div>
+            <div class="subtitle">
+              {{ link.description }} 
+            </div>
+          </div>
+          <footer class="card-footer">
+            <p class="card-footer-item">
+              <span>
+                {{ link.price | currency }}
+              </span>
+            </p>
+            <p class="card-footer-item">
+              <a @click.prevent.stop="()=>{addToCart(link); toggleDisplay(link); checkthisitemisincart(link) }"  class="button is-gray" href="#">Add To Cart</a>
+            </p>
+            <p class="card-footer-item" >
+              <span  class='cart-buttons' v-if='link.showing' v-for='cartItem of cartItems' :key="cartItem.id">
+                <template v-if="link.id === cartItem.id && cartItem.quantity >0">
+                  <button @click="decreaseItem(cartItem)"  class="button is-medium" >-</button>
+                    <span >{{ cartItem.quantity }}</span>
+                  <button @click="addToCart(cartItem)" class="button is-medium" >+</button>
+                </template>
+              </span>
+            </p>
+          
+          </footer>
         </div>
-        <footer class="card-footer">
-          <p class="card-footer-item">
-            <span>
-              {{ link.price | currency }}
-            </span>
-          </p>
-          <p class="card-footer-item">
-            <a @click.prevent.stop="()=>{addToCart(link); }" class="button is-gray" href="#">Add To Cart</a>
-          </p>
-          <!-- <p class="card-footer-item" >
-            <button @click="decreaseItem(link)"  class="button is-small" >-</button>
-              <span >{{ cartItems[link].quantity }}</span>
-            <button @click="addToCart(link)" class="button is-small" >+</button>
-          </p> -->
-        </footer>
       </div>
     </div>
 	</div>
@@ -60,6 +70,7 @@ export default {
     filteredLinks() {
       return this.$store.getters.filteredLinks(this.selectedCategory);
     },
+
     getCategories() {
       let categoriesSet = new Set();
       this.$store.state.all.forEach(link => {
@@ -83,8 +94,15 @@ export default {
       });
     },
     ...mapActions({
-      addToCart: "addToCart"
-    })
+      addToCart: "addToCart",
+      decreaseItem: "decreaseItem"
+    }),
+    toggleDisplay(item) {
+      item.showing = !item.showing;
+    },
+    checkthisitemisincart(existingItem) {
+      existingItem = this.products.filter(item => item.id == existingItem.id);
+    }
   },
   data() {
     return {
@@ -107,15 +125,20 @@ export default {
   margin-left: 0;
   margin-right: 0;
 }
+.categories {
+  .button {
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+}
 .columns {
   margin-top: 1rem;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  width: 100%;
   .column {
-    margin-right: 2rem;
-    margin-left: 2rem;
-    padding-left: -1rem;
-    padding-right: -1rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
   }
   figure {
     margin-left: 0;
@@ -123,13 +146,13 @@ export default {
   }
 }
 
-.column {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
 .card {
   display: flex;
   flex-direction: column;
+  height: 100%;
+}
+.cart-footer {
+  margin-top: auto;
 }
 
 .button.is-gray {
@@ -148,24 +171,34 @@ export default {
 .card-footer {
   margin-top: auto;
 }
-
-@media screen and(max-width: 576px) {
-  .column.is-12-phone {
-    -webkit-box-flex: 0;
-    -ms-flex: none;
-    flex: none;
-    width: 100%;
-  }
+.cart-buttons {
+  display: inline-flex;
+  width: 100%;
+  justify-content: space-around;
+  align-items: center;
 }
-
-@media screen and (max-width: 768px) {
-  .columns {
-    .column {
-      margin-left: 0;
-      margin-right: 0;
+@media screen and(max-width: 576px) {
+  .column.is-6-phone {
+    flex: none;
+    width: 50%;
+    .card-footer {
+      flex-direction: column;
+      padding-top: 1rem;
+      padding-bottom: 2rem;
     }
   }
 }
+
+// @media screen and (max-width: 768px) {
+//   .columns {
+//     .column {
+//       margin-left: 0;
+//       margin-right: 0;
+//       padding-left: 0;
+//       padding-right: 0;
+//     }
+//   }
+// }
 .input {
   width: 50px;
   margin-left: 0;

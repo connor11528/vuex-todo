@@ -9,7 +9,7 @@ import VueCurrencyFilter from "vue-currency-filter";
 Vue.use(VueRouter);
 
 Vue.use(VueCurrencyFilter, {
-  symbol: "€",
+  symbol: "EUP",
   thousandsSeparator: ",",
   fractionCount: 2,
   fractionSeparator: ".",
