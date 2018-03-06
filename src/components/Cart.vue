@@ -77,13 +77,12 @@ export default {
   methods: {
     checkout() {
       alert("Pay us £" + this.total);
-      return this.resetVersion();
+      this.resetStore();
     },
     ...mapActions({
       removeItem: "removeItem",
       decreaseItem: "decreaseItem",
-      increaseItem: "increaseItem",
-      resetVersion: "resetVersion"
+      resetStore: "resetStore"
     })
   }
 };

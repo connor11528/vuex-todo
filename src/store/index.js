@@ -8,7 +8,7 @@ const debug = process.env.NODE_ENV !== "production";
 
 // initial state
 const state = {
-  version: "1",
+  version: "",
   added: [],
   all: []
 };
@@ -64,9 +64,9 @@ const actions = {
       id: product.id
     });
   },
-  resetVersion({ commit }) {
-    commit("resetVersion", state);
-    commit("initialiseStore");
+  resetStore({ commit }, store) {
+    commit("resetStore", store);
+    commit("initialiseStore", store);
   },
   removeItem({ commit }, product) {
     commit(types.REMOVE_ITEM, {
@@ -99,7 +99,6 @@ const mutations = {
   [types.FETCH_PRODUCTS](state, all) {
     state.all = all;
   },
-
   [types.INCREASE_ITEM](state, { id }) {
     const record = state.added.find(p => p.id === id);
     record.quantity++;
@@ -111,17 +110,19 @@ const mutations = {
       record.quantity = 0;
     }
   },
-  resetVersion(state) {
-    return state.version++;
-  },
   // this is to set the localstorage version of the app versioning but .... we can clear it only if the cart is paid - all cache will be deleted )
+  resetStore({ commit }, store) {
+    state.version++;
+    state.added = [];
+  },
   initialiseStore(state) {
+    // Check if the store exists
     if (localStorage.getItem("store")) {
       let store = JSON.parse(localStorage.getItem("store"));
       if (store.version == version) {
         this.replaceState(Object.assign(state, store));
       } else {
-        state.version++;
+        state.version = version;
       }
     }
   }
