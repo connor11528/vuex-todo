@@ -28,18 +28,21 @@
                 {{ link.price | currency }}
               </span>
             </p>
-            <p class="card-footer-item">
+            <p class="card-footer-item" v-if="!link.showing">
               <a @click.prevent.stop="()=>{addToCart(link); toggleDisplay(link); checkthisitemisincart(link) }"  class="button is-gray" href="#">Add To Cart</a>
             </p>
-            <p class="card-footer-item" >
-              <span  class='cart-buttons' v-if='link.showing' v-for='cartItem of cartItems' :key="cartItem.id">
-                <template v-if="link.id === cartItem.id && cartItem.quantity >0">
-                  <button @click="decreaseItem(cartItem)"  class="button is-medium" >-</button>
-                    <span >{{ cartItem.quantity }}</span>
-                  <button @click="addToCart(cartItem)" class="button is-medium" >+</button>
-                </template>
-              </span>
-            </p>
+            <template  v-if='link.showing' v-for='cartItem of cartItems'  >
+              <template v-if="link.id === cartItem.id ">
+                <p class="card-footer-item" :key="cartItem.id" >
+                  <span  class='cart-buttons'>
+                      <button @click="decreaseItem(cartItem)"  class="button is-medium" >-</button>
+                        <span >{{ cartItem.quantity }}</span>
+                      <button @click="addToCart(cartItem)" class="button is-medium" >+</button>
+                  </span>
+                </p>
+              </template>
+            </template>
+         
           
           </footer>
         </div>
