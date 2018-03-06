@@ -23,7 +23,7 @@
 						</tr>
 					</thead>
 					<tbody class='vertical-align'>
-						<tr v-for="(p,index) in products" :key="p.id">
+						<tr v-for="(p) in products" :key="p.id">
 								<!-- <td> <img :src="p.image" alt="p.name"></td> -->
 								<td>{{ p.name }}</td>
 								<td>{{ p.price | currency }}</td>
@@ -32,7 +32,7 @@
 										<p >{{ p.quantity }}</p>
 										<button @click="increaseItem(p)" class="button is-medium" >+</button>
 								</td>
-								<td> <button @click="removeThisItem(p)" class="delete is-medium" ></button></td>
+								<td> <button @click="removeThisItem(p)" class="delete is-large" ></button></td>
 							</tr>
 							<tr>
 								<td><b>Total:</b></td>
@@ -44,7 +44,7 @@
     </section>
     <footer class="modal-card-foot">
       <router-link to="/">
-        <button v-show="products.length" class="button is-payment"  @click="checkout()">Make payment</button>
+        <button v-show="products.length" class="button is-payment"  @click="checkout()"> Pay</button>
       </router-link>
 			<router-link to="/">
         <button v-show="products.length" class="button is-gray is-reverted is-outlined" >	
@@ -82,7 +82,8 @@ export default {
     ...mapActions({
       removeItem: "removeItem",
       decreaseItem: "decreaseItem",
-      resetStore: "resetStore"
+      resetStore: "resetStore",
+      increaseItem: "increaseItem"
     })
   }
 };
@@ -97,17 +98,27 @@ export default {
   font-feature-settings: "tnum";
   font-variant-numeric: tabular-nums;
 }
-tbody td {
+.modal-card-body table tbody td {
   width: 100px;
   vertical-align: middle;
 }
-.cart-buttons {
-  display: inline-flex;
+td .cart-buttons {
+  display: flex;
   width: 100%;
-  justify-content: space-around;
+  flex-flow: row nowrap;
+  justify-content: space-between;
   align-items: center;
+  margin-bottom: -7px;
+  padding-bottom: 7px;
+  .button.is-medium {
+    background-color: rgb(55, 178, 158);
+    color: whitesmoke;
+  }
 }
-
+.modal-card-foot {
+  display: flex;
+  justify-content: space-around;
+}
 .is-payment {
   background-color: rgb(55, 178, 158);
   color: whitesmoke;
