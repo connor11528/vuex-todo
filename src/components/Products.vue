@@ -55,7 +55,6 @@
 <script>
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import store from "../store/index.js";
-import NumberInput from "./NumberInput.vue";
 
 export default {
   name: "Products",
@@ -113,9 +112,6 @@ export default {
       selectedCategory: "",
       categories: []
     };
-  },
-  components: {
-    NumberInput
   }
 };
 </script>
