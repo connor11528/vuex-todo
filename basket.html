@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Basket Page</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+    </head>
+    <style>
+        .is-gray {
+            background-color: #354d5b;
+            color: whitesmoke;
+        }
+
+        .navbar {
+            height: auto;
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav {
+            padding-left: 1rem;
+            padding-right: 1rem;
+            padding-top: 0.5rem;
+            z-index: 1205;
+        }
+
+        .nav-item {
+            align-self: center;
+            height: auto;
+        }
+
+        .nav-item img {
+            max-height: 2rem;
+        }
+    </style>
+
+    <body>
+        <nav data-v-0669f866="" class="navbar if-fixed has-shadow is-gray">
+            <div data-v-0669f866="" class="navbar-brand">
+                <a data-v-0669f866="" href="#/" class="nav-item router-link-active">
+                    <img data-v-0669f866="" srcset="/static/inverse-slim.png ,
+                   /static/inverse-slim@2x.png 2x,
+                   /static/inverse-slim@3x.png 3x" src="/static/inverse-slim@3x.png" alt="Secure Aid Logo">
+                </a>
+            </div>
+            <div data-v-0669f866="" id="mainNav" class="navbar-menu is-gray ">
+                <div data-v-0669f866="" class="navbar-end">
+                    <div data-v-0669f866="" class="nav-item">
+                        <!-- <div data-v-0669f866="" class="field is-grouped">
+                            <p data-v-0669f866="" class="control">
+                                <a data-v-0669f866="" href="#/cart" class="button is-gray  router-link-exact-active router-link-active">
+                                    <span data-v-0669f866="" class="icon">
+                                        <object data-v-0669f866="" data="/static/shopping-cart.svg" type="image/svg+xml"></object>
+                                    </span>
+                                    <span data-v-0669f866=""> EUP 3,024.00</span>
+                                </a>
+                            </p>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div data-v-61ba503d="" id="modal" class="cart modal is-active">
+            <a data-v-61ba503d="" href="#/" class="router-link-active">
+                <div data-v-61ba503d="" class="modal-background"></div>
+            </a>
+            <div data-v-61ba503d="" class="modal-card">
+                <header data-v-61ba503d="" class="modal-card-head">
+                    <p data-v-61ba503d="" class="modal-card-title">Cart total
+                        <span data-v-61ba503d="" id='totalCart'> </span>
+                    </p>
+                    <!-- <a data-v-61ba503d="" href="#/" class="router-link-active">
+                        <span data-v-61ba503d="" class="delete"></span>
+                    </a> -->
+                </header>
+                <section data-v-61ba503d="" class="modal-card-body">
+                    <table data-v-61ba503d="" class="table is-striped is-fullwidth is-narrow">
+                        <thead data-v-61ba503d="">
+                            <tr data-v-61ba503d="">
+
+                                <td data-v-61ba503d="">Name</td>
+                                <td data-v-61ba503d="">Price</td>
+                                <td data-v-61ba503d="">Qty</td>
+                            </tr>
+                        </thead>
+                        <tbody data-v-61ba503d="" class="vertical-align">
+
+                        </tbody>
+                    </table>
+                </section>
+                <footer data-v-61ba503d="" class="modal-card-foot">
+                    <a data-v-61ba503d="" href="#/" class="router-link-active">
+                        <button data-v-61ba503d="" class="button is-gray is-reverted is-outlined">
+                            Payment
+                        </button>
+                    </a>
+                </footer>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+        <script>
+            const basket = JSON.parse(localStorage.getItem('store'))
+            let total = 0;
+            for (let item = 0; item < basket.added.length; item++) {
+                $('tbody').append(
+                    `
+                    <tr data-v-61ba503d="">
+                        <td data-v-61ba503d="">${basket.added[item].name}</td>
+                        <td data-v-61ba503d="">${basket.added[item].price}</td>
+                        <td data-v-61ba503d="" class="has-text-centered cart-buttons">
+                          
+                            <p data-v-61ba503d="">${basket.added[item].quantity}</p>
+                        
+                        </td>
+                        <td data-v-61ba503d="">
+                      
+                        </td>
+                    </tr>
+        
+                    `
+                )
+                total += basket.added[item].price * basket.added[item].quantity;
+
+            }
+            Number.prototype.formatMoney = function (c, d, t) {
+                var n = this,
+                    c = isNaN(c = Math.abs(c)) ? 2 : c,
+                    d = d == undefined ? "." : d,
+                    t = t == undefined ? "," : t,
+                    s = n < 0 ? "-" : "",
+                    i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
+                    j = (j = i.length) > 3 ? j % 3 : 0;
+                return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+            };
+            $('#totalCart').html("EUP " + (total).formatMoney(2, '.', ','));
+        </script>
+    </body>
+
+</html>

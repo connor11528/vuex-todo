@@ -90,7 +90,9 @@ const mutations = {
     if (!record) {
       state.added.push({
         id,
-        quantity: 1
+        quantity: 1,
+        name: state.all.find(p => p.id === id).product,
+        price: state.all.find(p => p.id === id).price
       });
     } else {
       record.quantity++;
