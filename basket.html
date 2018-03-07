@@ -51,16 +51,6 @@
             <div data-v-0669f866="" id="mainNav" class="navbar-menu is-gray ">
                 <div data-v-0669f866="" class="navbar-end">
                     <div data-v-0669f866="" class="nav-item">
-                        <!-- <div data-v-0669f866="" class="field is-grouped">
-                            <p data-v-0669f866="" class="control">
-                                <a data-v-0669f866="" href="#/cart" class="button is-gray  router-link-exact-active router-link-active">
-                                    <span data-v-0669f866="" class="icon">
-                                        <object data-v-0669f866="" data="/static/shopping-cart.svg" type="image/svg+xml"></object>
-                                    </span>
-                                    <span data-v-0669f866=""> EUP 3,024.00</span>
-                                </a>
-                            </p>
-                        </div> -->
                     </div>
                 </div>
             </div>
@@ -72,11 +62,8 @@
             <div data-v-61ba503d="" class="modal-card">
                 <header data-v-61ba503d="" class="modal-card-head">
                     <p data-v-61ba503d="" class="modal-card-title">Cart total
-                        <span data-v-61ba503d="" id='totalCart'> </span>
+                        <span data-v-61ba503d="" id="totalCart"> </span>
                     </p>
-                    <!-- <a data-v-61ba503d="" href="#/" class="router-link-active">
-                        <span data-v-61ba503d="" class="delete"></span>
-                    </a> -->
                 </header>
                 <section data-v-61ba503d="" class="modal-card-body">
                     <table data-v-61ba503d="" class="table is-striped is-fullwidth is-narrow">
@@ -125,7 +112,6 @@
                     `
                 )
                 total += basket.added[item].price * basket.added[item].quantity;
-
             }
             Number.prototype.formatMoney = function (c, d, t) {
                 var n = this,
