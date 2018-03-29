@@ -8,6 +8,9 @@
                    /static/inverse-slim@3x.png 3x"
             src="/static/inverse-slim@3x.png" alt="Secure Aid Logo">
 	    </router-link>
+            <button class="button" v-show='!categShown' @click='changeCateg'>
+              {{ this.$store.state.selectedCategory}}
+            </button>
 	  </div>
 	  <div class="navbar-menu is-gray " id='mainNav' >
 			<div class="navbar-end">
@@ -96,13 +99,19 @@ import store from "../store/index.js";
 export default {
   data() {
     return {
-      showNav: false
     };
+  },
+  methods: {
+    changeCateg() {
+      this.$store.dispatch('showCateg')
+    },
   },
   computed: {
     ...mapGetters({
-      products: "cartProducts"
+      products: "cartProducts",
+      categShown: 'categShown'
     }),
+
     itemsInCart() {
       let cart = this.$store.getters.cartProducts;
       return cart.reduce((accum, item) => accum + item.quantity, 0);

@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import * as types from "./mutation-types";
 const version = 1;
+import App from "../App.vue";
 Vue.use(Vuex);
 
 const debug = process.env.NODE_ENV !== "production";
@@ -10,7 +11,9 @@ const debug = process.env.NODE_ENV !== "production";
 const state = {
   version: "",
   added: [],
-  all: []
+  all: [],
+  categShown: null,
+  selectedCategory: null
 };
 
 // getters
@@ -32,12 +35,29 @@ const getters = {
       }
     );
   },
+  categShown: state => state.categShown,
+
   filteredLinks: state => category =>
-    state.all.filter(item => item.category === category)
+    state.all.filter(item => item.category === category),
+  filteredSubcateg: state => subcateg =>
+    state.all.filter(ele => ele.subcateg === subcateg)
 };
 
 // actions
 const actions = {
+  updateNav({ commit }, value) {
+    commit("updateNav", value);
+  },
+  showCateg({ commit }) {
+    commit("showCateg");
+  },
+  hideCateg({ commit }) {
+    commit("categHide");
+  },
+  changeCateg({ commit }) {
+    commit("categShown", value);
+    console.log(value);
+  },
   addToCart({ commit }, product) {
     commit(types.ADD_TO_CART, {
       id: product.id
@@ -127,6 +147,15 @@ const mutations = {
         state.version = version;
       }
     }
+  },
+  categHide(state) {
+    state.categShown = false;
+  },
+  showCateg(state) {
+    state.categShown = true;
+  },
+  updateNav(state, value) {
+    state.selectedCategory = value;
   }
 };
 

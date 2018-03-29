@@ -1,14 +1,19 @@
 <template>
 	<div class='content main-content'>
-		<!-- <h1 class="subtitle">{{ categlength }} Categories</h1> -->
     <div class="categories">
-        <button class="button" v-for="category in getCategories" :key="category.id"  @click="selectedCategory = category" :class="{ 'is-gray': selectedCategory == category }">
-          {{ category }} 
-          <!-- ( {{ categoryCount(category).length }} ) -->
+        <div class="block" v-show='categShown' v-for="category in getCategories" :key="category.id"  :class="{ 'is-gray': selectedCategory == category }">
+          <a class='button' @click="selectedCategory = category; hideCateg(); updateNav(selectedCategory)" >
+            {{ category }} 
+          </a>
+        </div>
+    </div>
+    <div class="subcategories" v-show='!categShown'  v-if='selectedCategory'>
+        <button class="button" v-for="subcategory in getSubcategories" :key="subcategory.id"   @click="selectedSubCategory = subcategory" :class="{ 'is-gray': selectedSubCategory == subcategory }">
+          {{ subcategory }} 
         </button>
     </div>
 		<div class="columns is-multiline is-mobile no-padding">
-      <div class="column is-12-phone is-4-mobile is-4-tablet is-4-desktop" v-for="link in filteredLinks" :key="link.id" :class="{current: selectedCategory == link.category }">
+      <div class="column is-12-phone is-4-mobile is-4-tablet is-4-desktop" v-show='!categShown'  v-for="link in filteredSubcateg" v-if='selectedCategory === link.category' :key="link.id" :class="{current: selectedSubCategory == link.subcategory }">
         <div class="card ">
           <div class="card-image">
             <figure class="image ">
@@ -68,10 +73,11 @@ export default {
     ...mapGetters({
       products: "allProducts",
       length: "getNumberOfProducts",
-      cartItems: "cartProducts"
+      cartItems: "cartProducts",
+      categShown:'categShown'
     }),
-    filteredLinks() {
-      return this.$store.getters.filteredLinks(this.selectedCategory);
+    filteredSubcateg() {
+      return this.$store.getters.filteredSubcateg(this.selectedSubCategory)
     },
 
     getCategories() {
@@ -81,16 +87,29 @@ export default {
       });
       return (this.categories = Array.from(categoriesSet));
     },
-    initialcateg() {
-      setTimeout(() => {
-        return (this.selectedCategory = this.getCategories[0]);
-      }, 150);
+    getSubcategories() {
+      let subcategoriesSet = new Set();
+      this.$store.state.all.forEach(link => {
+        subcategoriesSet.add(link.subcateg);
+      });
+      return (this.subcategories = Array.from(subcategoriesSet));
     },
+    // initialcateg() {
+    //   setTimeout(() => {
+    //     return (this.selectedCategory = this.getCategories[0]);
+    //   }, 150);
+    // },
     categlength() {
       return this.categories ? this.categories.length : 0;
     }
   },
   methods: {
+    hideCateg() {
+      this.$store.dispatch('hideCateg')
+    },
+    updateNav(value){
+      this.$store.dispatch('updateNav', value)
+      },
     categoryCount(category) {
       return this.products.filter(link => {
         return link.category.match(category);
@@ -110,7 +129,9 @@ export default {
   data() {
     return {
       selectedCategory: "",
-      categories: []
+      selectedSubCategory:'',
+      categories: [],
+      subcategories: []
     };
   }
 };
