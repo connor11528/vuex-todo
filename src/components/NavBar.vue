@@ -9,7 +9,7 @@
             src="/static/inverse-slim@3x.png" alt="Secure Aid Logo">
 	    </router-link>
             <button class="button" v-show='!categShown' @click='changeCateg'>
-              {{ this.$store.state.selectedCategory}}
+              {{ this.$store.state.selectedCategory}} <span class="fa fa-close">&nbsp; &nbsp; &times;</span>
             </button>
 	  </div>
 	  <div class="navbar-menu is-gray " id='mainNav' >
