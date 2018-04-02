@@ -2,15 +2,16 @@
 	<div class='content main-content'>
     <div class="categories">
         <div class="block" v-show='categShown' v-for="category in getCategories" :key="category.id"  :class="{ 'is-gray': selectedCategory == category }">
-          <a class='button' @click="selectedCategory = category; hideCateg(); updateNav(selectedCategory)" >
+          <a class='button' @click="selectedCategory = category; hideCateg(); initialSubCateg(); updateNav(selectedCategory); filterProd(selectedCategory)" >
             {{ category }} 
           </a>
         </div>
     </div>
-    <div class="subcategories" v-show='!categShown'  v-if='selectedCategory'>
-        <button class="button" v-for="subcategory in getSubcategories" :key="subcategory.id"   @click="selectedSubCategory = subcategory" :class="{ 'is-gray': selectedSubCategory == subcategory }">
+    <div class=" subcategories" v-show='!categShown'  v-if='selectedCategory'>
+        <button class="button" v-for="subcategory in getSubcategories" :key="subcategory.id" @click="selectedSubCategory = subcategory" :class="{ 'is-gray': selectedSubCategory == subcategory }">
           {{ subcategory }} 
         </button>
+
     </div>
 		<div class="columns is-multiline is-mobile no-padding">
       <div class="column is-12-phone is-4-mobile is-4-tablet is-4-desktop" v-show='!categShown'  v-for="link in filteredSubcateg" v-if='selectedCategory === link.category' :key="link.id" :class="{current: selectedSubCategory == link.subcategory }">
@@ -67,7 +68,7 @@ export default {
     this.$store.dispatch("fetchProducts", { self: this });
   },
   mounted() {
-    this.initialcateg;
+    // this.initialSubCateg;
   },
   computed: {
     ...mapGetters({
@@ -76,9 +77,10 @@ export default {
       cartItems: "cartProducts",
       categShown:'categShown'
     }),
-    filteredSubcateg() {
-      return this.$store.getters.filteredSubcateg(this.selectedSubCategory)
-    },
+
+      filteredSubcateg() {
+        return this.$store.getters.filteredSubcateg(this.selectedSubCategory)
+      },
 
     getCategories() {
       let categoriesSet = new Set();
@@ -89,21 +91,25 @@ export default {
     },
     getSubcategories() {
       let subcategoriesSet = new Set();
-      this.$store.state.all.forEach(link => {
+      this.$store.state.filteredProducts.forEach(link => {
         subcategoriesSet.add(link.subcateg);
       });
       return (this.subcategories = Array.from(subcategoriesSet));
     },
-    // initialcateg() {
-    //   setTimeout(() => {
-    //     return (this.selectedCategory = this.getCategories[0]);
-    //   }, 150);
-    // },
+
     categlength() {
       return this.categories ? this.categories.length : 0;
     }
   },
   methods: {
+    ...mapActions(    {
+      filterProd: 'filterProducts'
+    }),
+    initialSubCateg() {
+      setTimeout(() => {
+        return (this.selectedSubCategory = this.getSubcategories[0]);
+      }, 150);
+    },
     hideCateg() {
       this.$store.dispatch('hideCateg')
     },
@@ -124,7 +130,12 @@ export default {
     },
     checkthisitemisincart(existingItem) {
       existingItem = this.products.filter(item => item.id == existingItem.id);
-    }
+    },
+
+  filteredProducts(category) {
+     return this.$store.state.all.filter(el => el.category === category)
+  }
+
   },
   data() {
     return {

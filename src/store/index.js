@@ -12,7 +12,8 @@ const state = {
   version: "",
   added: [],
   all: [],
-  categShown: null,
+  filteredProducts: [],
+  categShown: true,
   selectedCategory: null
 };
 
@@ -36,13 +37,13 @@ const getters = {
     );
   },
   categShown: state => state.categShown,
-
   filteredLinks: state => category =>
-    state.all.filter(item => item.category === category),
+    state.all.filter(item => {
+      return item.category === category}),
   filteredSubcateg: state => subcateg =>
-    state.all.filter(ele => ele.subcateg === subcateg)
-};
-
+    state.filteredProducts.filter(ele => {
+      return ele.subcateg === subcateg}),
+}
 // actions
 const actions = {
   updateNav({ commit }, value) {
@@ -64,7 +65,7 @@ const actions = {
     });
   },
   fetchProducts({ commit }) {
-    fetch("http://mac001:3000/products")
+    fetch("http://localhost:3000/products")
       .then(res => res.json())
       .then(data => {
         commit("FETCH_PRODUCTS", data);
@@ -73,7 +74,6 @@ const actions = {
         console.log(error.statusText);
       });
   },
-
   increaseItem({ commit }, product) {
     commit(types.INCREASE_ITEM, {
       id: product.id
@@ -92,6 +92,9 @@ const actions = {
     commit(types.REMOVE_ITEM, {
       id: product.id
     });
+  },
+  filterProducts({commit}, value) {
+    commit('filterProd', value)
   }
 };
 
@@ -156,6 +159,10 @@ const mutations = {
   },
   updateNav(state, value) {
     state.selectedCategory = value;
+  },
+  filterProd(state, value) {
+    state.filteredProducts = state.all.filter( item => {
+      return item.category === value})
   }
 };
 
