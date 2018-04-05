@@ -62,8 +62,11 @@ const actions = {
   updateNav({ commit }, value) {
     commit("updateNav", value);
   },
-  updateSuCateg({commit}, value) {
-    commit('updateSuCateg', value)
+  updateCat({ commit }, value) {
+    commit("updateCat", value);
+  },
+  updateSubCateg({ commit }, value) {
+    commit("updateSubCateg", value);
   },
   getCategs({ commit }, value) {
     commit("getCategories", value);
@@ -181,8 +184,11 @@ const mutations = {
   updateNav(state, value) {
     state.selectedCategory = value;
   },
-  updateSuCateg(state, value){
-state.selectedSubCategory = value
+  updateCat(state, value) {
+    state.selectedCategory = value;
+  },
+  updateSubCateg(state, value) {
+    state.selectedSubCategory = value;
   },
   filterProd(state, value) {
     state.filteredProducts = state.all.filter(item => {
