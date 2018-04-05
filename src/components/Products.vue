@@ -1,5 +1,5 @@
 <template>
-	<div class='content main-content'>
+	<div class='section main-content'>
     <div class="categories">
         <div class="block" v-show='categShown' v-for="category in getCategories" :key="category.id"  :class="{ 'is-gray': selectedCategory == category }">
           <a class='button' @click="selectedCategory = category; hideCateg(); initialSubCateg(); updateNav(selectedCategory); filterProd(selectedCategory)" >
@@ -75,47 +75,32 @@ export default {
       products: "allProducts",
       length: "getNumberOfProducts",
       cartItems: "cartProducts",
-      categShown:'categShown'
+      categShown: "categShown",
+      getCurrentSubCateg: "getCurrentSubCateg",
+      getCurrentCategory: "getCurrentCategory",
+      getCategories: "getCategories",
+      getSubcategories: "getSubcateg"
     }),
 
-      filteredSubcateg() {
-        return this.$store.getters.filteredSubcateg(this.selectedSubCategory)
-      },
-
-    getCategories() {
-      let categoriesSet = new Set();
-      this.$store.state.all.forEach(link => {
-        categoriesSet.add(link.category);
-      });
-      return (this.categories = Array.from(categoriesSet));
+    filteredSubcateg() {
+      return this.$store.getters.filteredSubcateg(this.selectedSubCategory);
     },
-    getSubcategories() {
-      let subcategoriesSet = new Set();
-      this.$store.state.filteredProducts.forEach(link => {
-        subcategoriesSet.add(link.subcateg);
-      });
-      return (this.subcategories = Array.from(subcategoriesSet));
-    },
-
     categlength() {
       return this.categories ? this.categories.length : 0;
     }
   },
   methods: {
-    ...mapActions(    {
-      filterProd: 'filterProducts'
-    }),
     initialSubCateg() {
       setTimeout(() => {
-        return (this.selectedSubCategory = this.getSubcategories[0]);
+        return this.selectedSubCategory;
       }, 150);
     },
     hideCateg() {
-      this.$store.dispatch('hideCateg')
+      this.$store.dispatch("hideCateg");
     },
-    updateNav(value){
-      this.$store.dispatch('updateNav', value)
-      },
+    updateNav(value) {
+      this.$store.dispatch("updateNav", value);
+    },
     categoryCount(category) {
       return this.products.filter(link => {
         return link.category.match(category);
@@ -123,7 +108,8 @@ export default {
     },
     ...mapActions({
       addToCart: "addToCart",
-      decreaseItem: "decreaseItem"
+      decreaseItem: "decreaseItem",
+      filterProd: "filterProducts"
     }),
     toggleDisplay(item) {
       item.showing = !item.showing;
@@ -132,17 +118,16 @@ export default {
       existingItem = this.products.filter(item => item.id == existingItem.id);
     },
 
-  filteredProducts(category) {
-     return this.$store.state.all.filter(el => el.category === category)
-  }
-
+    filteredProducts(category) {
+      return this.$store.state.all.filter(el => el.category === category);
+    }
   },
   data() {
     return {
-      selectedCategory: "",
-      selectedSubCategory:'',
-      categories: [],
-      subcategories: []
+      categories: this.getCategories,
+      subcategories: this.getSubCategories,
+      selectedSubCategory: this.getCurrentSubCateg || null,
+      selectedCategory: this.getCurrentCategory || null
     };
   }
 };
@@ -272,16 +257,6 @@ export default {
   }
 }
 
-// @media screen and (max-width: 768px) {
-//   .columns {
-//     .column {
-//       margin-left: 0;
-//       margin-right: 0;
-//       padding-left: 0;
-//       padding-right: 0;
-//     }
-//   }
-// }
 .input {
   width: 50px;
   margin-left: 0;

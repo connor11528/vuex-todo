@@ -1,96 +1,63 @@
 <template>
 <header>
-	<nav class="navbar if-fixed has-shadow is-gray" >
-	  <div class="navbar-brand">
-	    <router-link to="/" class="nav-item">
+  <nav class="navbar is-fixed-top "  role="navigation" aria-label="main navigation">
+    <div v-if='!categShown' class="navbar-brand">
+        <a href="#"  class="navbar-item " @click='changeCateg'>
+          {{ this.getCurrentCategory }} <span class="fa fa-close">&nbsp; &nbsp; &times;</span>
+        </a>
+        <div class="navbar-burger burger" id='burger' data-target="mainNav" @click="activeMenu(); ">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+    </div>
+    <div v-else class="navbar-brand">
+	    <router-link to="#" class="navbar-item">
 	      <img srcset="/static/inverse-slim.png ,
                    /static/inverse-slim@2x.png 2x,
                    /static/inverse-slim@3x.png 3x"
             src="/static/inverse-slim@3x.png" alt="Secure Aid Logo">
 	    </router-link>
-            <button class="button" v-show='!categShown' @click='changeCateg'>
-              {{ this.$store.state.selectedCategory}} <span class="fa fa-close">&nbsp; &nbsp; &times;</span>
-            </button>
+      <div class="navbar-burger burger" id='burger'  data-target="mainNav" @click="activeMenu(); ">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
 	  </div>
-	  <div class="navbar-menu is-gray " id='mainNav' >
-			<div class="navbar-end">
-	    <div class="nav-item" >
-	      <div class="field is-grouped">
-	        <p class="control">
-	          <router-link to='/cart' class="button is-gray " >
-	            <span class="icon">
+    <div class="cart">
+      <div class="navbar-item">
+        <div class="field is-grouped">
+          <p class="control">
+            <router-link to='/cart' class="button is-gray " >
+              <span class="icon">
               <object data="/static/shopping-cart.svg" type="image/svg+xml"></object>
-	            </span>
-	            <span> {{total | currency}}</span>
-	          </router-link>
-	        </p>
-	      </div>
-	      </div>
-	    </div>
-	  </div>
+              </span>
+              <span> {{total | currency}}</span>
+            </router-link>
+          </p>
+        </div>
+      </div>
+    </div>
+	  
+    <div class="navbar-menu " id='mainNav' >
+      <div class="navbar-end">
+        <div href="#"  v-for="category in getCategories" class="navbar-item has-dropdown" :key="category.id" > 
+          <a class='navbar-link'  :class="{ 'is-gray is-active': selectedCategory == category }"  @click="selectedCategory = category;  activeMenu(); initialSubCateg(); updateNav(selectedCategory); hideCateg(); filterProd(selectedCategory)">
+            {{category}}
+          </a>
+          <div class='navbar-dropdown'  v-if='selectedCategory'>
+            <a class='navbar-item' v-for="subcategory in filteredSubcateg" :key="subcategory.id" @click="selectedSubCategory = subcategory; activeMenu(); hideCateg(); updateSubCateg(subcategory); initialSubCateg();" :class="{ 'is-gray is-active': selectedSubCategory == subcategory }">
+              {{ subcategory}}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
 	</nav>
 
-	</header>
+
+</header>
 </template>
-
-<style lang="scss" scoped>
-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-}
-nav {
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-top: 0.5rem;
-}
-.is-gray {
-  background-color: rgb(53, 77, 91);
-  color: whitesmoke;
-}
-
-.navbar {
-  height: auto;
-  // margin-bottom: 2rem;
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: space-between;
-  align-items: center;
-
-  .navbar-menu {
-    width: auto;
-    box-shadow: none;
-    display: block;
-    padding-top: 0;
-  }
-}
-.button.is-gray {
-  &:active,
-  &:focus {
-    border-color: whitesmoke;
-    background: lighten($color: rgb(53, 77, 91), $amount: 10%);
-    outline: none;
-  }
-}
-.nav-item {
-  align-self: center;
-  height: auto;
-  .field.is-grouped {
-    justify-content: center;
-  }
-}
-
-.nav-item img {
-  max-height: 2rem;
-}
-
-.icon svg:hover path,
-.icon svg:focus path {
-  fill: #220b0b;
-}
-</style>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
@@ -99,17 +66,50 @@ import store from "../store/index.js";
 export default {
   data() {
     return {
+      selectedSubCategory: this.getCurrentSubCateg,
+      selectedCategory: this.getCurrentCategory
     };
   },
   methods: {
+    ...mapActions({
+      filterProd: "filterProducts",
+      updateSubCateg: 'updateSubCateg'
+    }),
     changeCateg() {
-      this.$store.dispatch('showCateg')
+      this.$store.dispatch("showCateg");
     },
+    hideCateg() {
+      this.$store.dispatch("hideCateg");
+    },
+    activeMenu() {
+      var $el = document.getElementById("burger");
+      var target = $el.dataset.target;
+      var $target = document.getElementById(target);
+      $el.classList.toggle("is-active");
+      $target.classList.toggle("is-active");
+    },
+    initialSubCateg() {
+      setTimeout(() => {
+        return this.selectedSubCategory;
+      }, 150);
+    },
+    updateNav(value) {
+      this.$store.dispatch("updateNav", value);
+      console.log(this.getCurrentCategory);
+    },
+    filteredProducts(category) {
+      return this.$store.state.all.filter(el => el.category === category);
+    }
   },
   computed: {
     ...mapGetters({
       products: "cartProducts",
-      categShown: 'categShown'
+      categShown: "categShown",
+      getCurrentSubCateg: "getCurrentSubCateg",
+      getCurrentCategory: "getCurrentCategory",
+      getCategories: "getCategories",
+      getSubcategories: "getSubcateg",
+      filteredSubcateg: "filteredSubcateg"
     }),
 
     itemsInCart() {
@@ -121,6 +121,21 @@ export default {
         return total + p.price * p.quantity;
       }, 0);
     }
+  },
+  mounted() {
+    this.$store.dispatch("getCategs");
+    this.$store.dispatch("getSubCategs");
   }
 };
 </script>
+<style lang="scss" scoped>
+.is-gray {
+  background-color: rgb(53, 77, 91);
+  color: whitesmoke;
+}
+.cart {
+  position: absolute;
+  right: 50px;
+  top: 0;
+}
+</style>

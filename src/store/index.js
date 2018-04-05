@@ -14,7 +14,10 @@ const state = {
   all: [],
   filteredProducts: [],
   categShown: true,
-  selectedCategory: null
+  selectedCategory: null,
+  selectedSubCategory: null,
+  categories: [],
+  subCategories: []
 };
 
 // getters
@@ -39,15 +42,34 @@ const getters = {
   categShown: state => state.categShown,
   filteredLinks: state => category =>
     state.all.filter(item => {
-      return item.category === category}),
+      return item.category === category;
+    }),
   filteredSubcateg: state => subcateg =>
     state.filteredProducts.filter(ele => {
-      return ele.subcateg === subcateg}),
-}
+      return ele.subcateg === subcateg;
+    }),
+  getCurrentCategory: state => state.selectedCategory,
+  getCurrentSubCateg: state => state.selectedSubCategory,
+  getCategories: state => {
+    return state.categories;
+  },
+  getSubcateg: state => {
+    return state.subCategories;
+  }
+};
 // actions
 const actions = {
   updateNav({ commit }, value) {
     commit("updateNav", value);
+  },
+  updateSuCateg({commit}, value) {
+    commit('updateSuCateg', value)
+  },
+  getCategs({ commit }, value) {
+    commit("getCategories", value);
+  },
+  getSubCategs({ commit }, value) {
+    commit("getSubCategs", value);
   },
   showCateg({ commit }) {
     commit("showCateg");
@@ -93,8 +115,8 @@ const actions = {
       id: product.id
     });
   },
-  filterProducts({commit}, value) {
-    commit('filterProd', value)
+  filterProducts({ commit }, value) {
+    commit("filterProd", value);
   }
 };
 
@@ -135,7 +157,6 @@ const mutations = {
       record.quantity = 0;
     }
   },
-  // this is to set the localstorage version of the app versioning but .... we can clear it only if the cart is paid - all cache will be deleted )
   resetStore({ commit }, store) {
     state.version++;
     state.added = [];
@@ -160,9 +181,28 @@ const mutations = {
   updateNav(state, value) {
     state.selectedCategory = value;
   },
+  updateSuCateg(state, value){
+state.selectedSubCategory = value
+  },
   filterProd(state, value) {
-    state.filteredProducts = state.all.filter( item => {
-      return item.category === value})
+    state.filteredProducts = state.all.filter(item => {
+      return item.category === value;
+    });
+  },
+
+  getSubCategs(state) {
+    let subcategoriesSet = new Set();
+    state.filteredProducts.forEach(link => {
+      subcategoriesSet.add(link.subcateg);
+    });
+    return (state.subCategories = Array.from(subcategoriesSet));
+  },
+  getCategories(state) {
+    let categoriesSet = new Set();
+    state.all.filter(link => {
+      categoriesSet.add(link.category);
+      return (state.categories = Array.from(categoriesSet));
+    });
   }
 };
 
