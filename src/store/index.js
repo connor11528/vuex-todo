@@ -73,6 +73,7 @@ const actions = {
   },
   getSubCategs({ commit }, value) {
     commit("getSubCategs", value);
+    console.log('subcateg', value);
   },
   showCateg({ commit }) {
     commit("showCateg");
@@ -82,7 +83,7 @@ const actions = {
   },
   changeCateg({ commit }) {
     commit("categShown", value);
-    console.log(value);
+    console.log('navcateg', value);
   },
   addToCart({ commit }, product) {
     commit(types.ADD_TO_CART, {

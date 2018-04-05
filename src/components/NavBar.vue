@@ -66,8 +66,8 @@ import store from "../store/index.js";
 export default {
   data() {
     return {
-      selectedSubCategory: this.getCurrentSubCateg,
-      selectedCategory: this.getCurrentCategory
+      selectedSubCategory: this.getCurrentSubCateg || null,
+      selectedCategory: this.getCurrentCategory || null
     };
   },
   methods: {
@@ -94,8 +94,7 @@ export default {
       }, 150);
     },
     updateNav(value) {
-      this.$store.dispatch("updateNav", value);
-      console.log(this.getCurrentCategory);
+      this.$store.dispatch("updateNav", value);;
     },
     filteredProducts(category) {
       return this.$store.state.all.filter(el => el.category === category);

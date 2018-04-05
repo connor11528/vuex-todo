@@ -93,6 +93,8 @@ export default {
     initialSubCateg() {
       setTimeout(() => {
         return this.selectedSubCategory;
+      
+        
       }, 150);
     },
     hideCateg() {
@@ -124,8 +126,8 @@ export default {
   },
   data() {
     return {
-      categories: this.getCategories,
-      subcategories: this.getSubCategories,
+      // categories: this.getCategories,
+      // subcategories: this.getSubCategories,
       selectedSubCategory: this.getCurrentSubCateg || null,
       selectedCategory: this.getCurrentCategory || null
     };
