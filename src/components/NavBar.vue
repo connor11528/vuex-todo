@@ -103,13 +103,14 @@ export default {
       var $target = document.getElementById(target);
       $el.classList.toggle("is-active");
       $target.classList.toggle("is-active");
+      this.$store.dispatch('emptySubCateg')
     },
     selectCategory(value) {
       this.$store.dispatch("updateNav", value);
       this.$store.dispatch("updateSelectedCategory", value);
     },
     initialSubCateg() {
-      return this.$store.state.subCategories[0];
+      return (this.$store.state.subCategories[0])
     }
   },
   computed: {

@@ -2,18 +2,18 @@
 	<div class='section main-content'>
     <div class="categories">
         <div class="block" v-show='categShown' v-for="category in getCategories" :key="category.id"  :class="{ 'is-gray is-active': getCurrentCategory == category }" >
-          <a class='button' @click='selectCategory(category); filterProducts(category) ;' > 
+          <a class='button' @click='selectCategory(category); filterProducts(category); filterSubCat(); initialSubCateg()' > 
             {{ category }} 
           </a>
         </div>
     </div>
     <div class=" subcategories" v-show='!categShown'  v-if='getCurrentCategory'>
-        <button class="button" v-for='subcategory in getSubcateg' :key="subcategory.id" :class='{ "is-gray is-active": getCurrentSubCateg == subcategory}' @click="; selectSubCategory(subcategory);  ">
+        <button class="button" v-for='subcategory in getSubcateg' :key="subcategory.id" :class='{ "is-gray is-active": getCurrentSubCateg == subcategory}' @click="selectSubCategory(subcategory);  ">
           {{ subcategory }} 
         </button>
     </div>
 		<div class="columns is-multiline is-mobile no-padding">
-      <div class="column is-12-phone is-4-mobile is-4-tablet is-4-desktop" v-show='!categShown' v-for='link in filteredFinalProducts' v-if='getCurrentCategory === link.category' :key="link.id" :class="{current: link.subcategory }">
+      <div class="column is-12-phone is-4-mobile is-4-tablet is-4-desktop" v-show='!categShown' v-for='link in filteredFinalProducts' v-if='getCurrentCategory === link.category' :key="link.id" :class="{current: selectSubCategory(link.subcategory) }">
         <div class="card ">
           <div class="card-image">
             <figure class="image ">
@@ -90,7 +90,6 @@ export default {
     selectSubCategory(value) {
       this.$store.dispatch("updateSelectedSubCategory", value);
     },
-
     initialSubCateg() {
       setTimeout(() => {
         return this.$store.state.subCategories[0];
@@ -112,7 +111,7 @@ export default {
       this.$store.dispatch("getSubCategs");
     },
     filteredFinalProducts() {
-      return this.$store.getters.filteredSubcateg(
+      return this.$store.getters.filterSubProd(
         this.$store.state.selectedSubCategory
       );
     }

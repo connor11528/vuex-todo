@@ -31,11 +31,11 @@ const getters = {
   getSubcateg: state => {
     return state.subCategories;
   },
-  filteredSubcateg: (state, subcateg) => {
+  filterSubProd: state => subcateg => 
     state.filterProducts.filter(ele => {
       return ele.subcateg.includes(subcateg);
-    });
-  }
+    })
+  
 };
 
 export default getters;
