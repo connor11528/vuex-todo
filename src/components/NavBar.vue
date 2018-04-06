@@ -2,10 +2,10 @@
 <header>
   <nav class="navbar is-fixed-top "  role="navigation" aria-label="main navigation">
     <div v-if='!categShown' class="navbar-brand">
-        <a href="#"  class="navbar-item " @click='changeCateg'>
-          {{ this.getCurrentCategory }} <span class="fa fa-close">&nbsp; &nbsp; &times;</span>
+        <a href="#"  class="navbar-item " @click='changeCateg()'>
+          {{ this.selectedCategory }} <span class="fa fa-close">&nbsp; &nbsp; &times;</span>
         </a>
-        <div class="navbar-burger burger" id='burger' data-target="mainNav" @click="activeMenu(); ">
+        <div class="navbar-burger burger" id='burger' data-target="mainNav" @click="activeMenu();" >
           <span></span>
           <span></span>
           <span></span>
@@ -18,7 +18,7 @@
                    /static/inverse-slim@3x.png 3x"
             src="/static/inverse-slim@3x.png" alt="Secure Aid Logo">
 	    </router-link>
-      <div class="navbar-burger burger" id='burger'  data-target="mainNav" @click="activeMenu(); ">
+      <div class="navbar-burger burger" id='burger'  data-target="mainNav" @click="activeMenu();" >
         <span></span>
         <span></span>
         <span></span>
@@ -38,18 +38,28 @@
         </div>
       </div>
     </div>
-	  
     <div class="navbar-menu " id='mainNav' >
       <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="control">
+            <div class='select'>
+              <select name="language-select" id="language-selector">
+                <option value="en">EN</option>
+                <option value="ar">AR</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      
         <div href="#"  v-for="category in getCategories" class="navbar-item has-dropdown" :key="category.id" > 
-          <a class='navbar-link'  :class="{ 'is-gray is-active': selectedCategory == category }"  @click="selectedCategory = category;  activeMenu(); initialSubCateg(); updateNav(selectedCategory); hideCateg(); filterProd(selectedCategory)">
+          <a class='navbar-link' @click="selectCategory(category); activeMenu(); categHide(); filterProducts(category); filterSubCat() ; initialSubCateg(); " :class="{'is-gray is-active': selectedCategory == category  }" >
             {{category}}
           </a>
-          <div class='navbar-dropdown'  v-if='selectedCategory'>
-            <a class='navbar-item' v-for="subcategory in filteredSubcateg" :key="subcategory.id" @click="selectedSubCategory = subcategory; activeMenu(); hideCateg(); updateSubCateg(subcategory); initialSubCateg();" :class="{ 'is-gray is-active': selectedSubCategory == subcategory }">
+          <!-- <div class='navbar-dropdown'  v-if='selectedCategory'>
+            <a class='navbar-item' v-for="subcategory in getSubcateg " :key="subcategory.id" @click="activeMenu(); " :class="{ 'is-gray is-active': selectedSubCategory == subcategory }">
               {{ subcategory}}
             </a>
-          </div>
+          </div>  -->
         </div>
       </div>
     </div>
@@ -65,20 +75,26 @@ import store from "../store/index.js";
 
 export default {
   data() {
-    return {
-      selectedSubCategory: this.getCurrentSubCateg || null,
-      selectedCategory: this.getCurrentCategory || null
-    };
+    return {};
+  },
+  created() {
+    this.$store.dispatch("fetchProducts");
+    setTimeout(() => {
+      this.$store.dispatch("getCategories");
+    }, 150);
   },
   methods: {
     ...mapActions({
-      filterProd: "filterProducts",
-      updateSubCateg: 'updateSubCateg'
+      filterProducts: "filterProducts"
     }),
+    filterSubCat() {
+      this.$store.dispatch("getSubCategs");
+    },
     changeCateg() {
       this.$store.dispatch("showCateg");
+      this.$store.dispatch("emptySubCateg");
     },
-    hideCateg() {
+    categHide() {
       this.$store.dispatch("hideCateg");
     },
     activeMenu() {
@@ -88,27 +104,22 @@ export default {
       $el.classList.toggle("is-active");
       $target.classList.toggle("is-active");
     },
+    selectCategory(value) {
+      this.$store.dispatch("updateNav", value);
+      this.$store.dispatch("updateSelectedCategory", value);
+    },
     initialSubCateg() {
-      setTimeout(() => {
-        return this.selectedSubCategory;
-      }, 150);
-    },
-    updateNav(value) {
-      this.$store.dispatch("updateNav", value);;
-    },
-    filteredProducts(category) {
-      return this.$store.state.all.filter(el => el.category === category);
+      return this.$store.state.subCategories[0];
     }
   },
   computed: {
     ...mapGetters({
-      products: "cartProducts",
       categShown: "categShown",
-      getCurrentSubCateg: "getCurrentSubCateg",
-      getCurrentCategory: "getCurrentCategory",
+      products: "cartProducts",
       getCategories: "getCategories",
-      getSubcategories: "getSubcateg",
-      filteredSubcateg: "filteredSubcateg"
+      getSubcateg: "getSubcateg",
+      selectedCategory: "getCurrentCategory",
+      selectedSubCategory: "getCurrentSubCateg"
     }),
 
     itemsInCart() {
@@ -120,10 +131,6 @@ export default {
         return total + p.price * p.quantity;
       }, 0);
     }
-  },
-  mounted() {
-    this.$store.dispatch("getCategs");
-    this.$store.dispatch("getSubCategs");
   }
 };
 </script>
