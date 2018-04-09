@@ -15,12 +15,13 @@ const state = {
   version: "",
   added: [],
   all: [],
-  filterProducts: [],
+  filteredProducts: [],
   categShown: true,
   selectedCategory: null,
   selectedSubCategory: null,
   categories: [],
-  subCategories: []
+  subCategories: [],
+  initialSubCat: ''
 };
 
 // one store for entire application

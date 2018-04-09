@@ -1,15 +1,19 @@
 // mutations
 const version = 1;
 const mutations = {
-  removeItem(state, { id }) {
+  removeItem(state, {
+    id
+  }) {
     const record = state.added
-      .map(function(item) {
+      .map(function (item) {
         return item.id;
       })
       .indexOf(id);
     state.added.splice(record, 1);
   },
-  addToCart(state, { id }) {
+  addToCart(state, {
+    id
+  }) {
     const record = state.added.find(p => p.id === id);
     if (!record) {
       state.added.push({
@@ -25,18 +29,24 @@ const mutations = {
   fetchProducts(state, all) {
     state.all = all;
   },
-  increaseItem(state, { id }) {
+  increaseItem(state, {
+    id
+  }) {
     const record = state.added.find(p => p.id === id);
     record.quantity++;
   },
-  decreaseItem(state, { id }) {
+  decreaseItem(state, {
+    id
+  }) {
     const record = state.added.find(p => p.id === id);
     record.quantity--;
     if (record.quantity < 0) {
       record.quantity = 0;
     }
   },
-  resetStore({ commit }, store) {
+  resetStore({
+    commit
+  }, store) {
     state.version++;
     state.added = [];
   },
@@ -51,7 +61,7 @@ const mutations = {
       }
     }
   },
-  categHide(state) {
+  hideCateg(state) {
     state.categShown = false;
   },
   showCateg(state) {
@@ -70,21 +80,30 @@ const mutations = {
     });
     state.categories = Array.from(categoriesSet);
   },
+
   getSubCategs(state) {
     let subcategoriesSet = new Set();
-    state.filterProducts.filter(el => {
+    state.filteredProducts.filter(el => {
       subcategoriesSet.add(el.subcateg);
     });
     state.subCategories = Array.from(subcategoriesSet);
   },
-  updateSelectedSubCateg(state, value) {
-    state.selectedSubCategory = value;
-  },
   updateSelectedCategory(state, value) {
     state.selectedCategory = value;
   },
-  filterProducts(state, value) {
-    state.filterProducts = state.all.filter(item => item.category === value);
-  }
+  updateSelectedSubCateg(state, value) {
+    state.selectedSubCategory = value;
+  },
+  filteredProducts(state, value) {
+    state.filteredProducts = state.all.filter(item => {
+      return item.category === value;
+    });
+  },
+  initialSubCateg: state => {
+    state.initialSubCat = state.selectedSubCategory = state.subCategories[0]
+  },
+  
+
+
 };
 export default mutations;

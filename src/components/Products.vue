@@ -1,19 +1,23 @@
 <template>
 	<div class='section main-content'>
-    <div class="categories">
-        <div class="block" v-show='categShown' v-for="category in getCategories" :key="category.id"  :class="{ 'is-gray is-active': getCurrentCategory == category }" >
-          <a class='button' @click='selectCategory(category); filterProducts(category); filterSubCat(); initialSubCateg()' > 
+    <div class="columns is-multiline is-mobile no-padding categories">
+        <div class="column is-12-phone is-6-mobile is-4-tablet is-4-desktop block " v-show='categShown' v-for="category in getCategories" :key="category.id">
+          <div class="card">
+          <div class="card-content has-text-centered">
+          <a class='button' style='white-space: normal; padding: 4rem 1rem;' @click='selectCategory(category);  filteredProducts(category); filterSubCat(); initialSubCateg(); ' > 
             {{ category }} 
           </a>
+          </div>
+          </div>
         </div>
     </div>
     <div class=" subcategories" v-show='!categShown'  v-if='getCurrentCategory'>
-        <button class="button" v-for='subcategory in getSubcateg' :key="subcategory.id" :class='{ "is-gray is-active": getCurrentSubCateg == subcategory}' @click="selectSubCategory(subcategory);  ">
+        <button class="button" v-for='subcategory in getSubcategs' :key="subcategory.id" :class='{ "is-gray is-active": subCat == subcategory}' @click="selectSubCategory(subcategory); subCat = subcategory ">
           {{ subcategory }} 
         </button>
     </div>
 		<div class="columns is-multiline is-mobile no-padding">
-      <div class="column is-12-phone is-4-mobile is-4-tablet is-4-desktop" v-show='!categShown' v-for='link in filteredFinalProducts' v-if='getCurrentCategory === link.category' :key="link.id" :class="{current: selectSubCategory(link.subcategory) }">
+      <div class="column is-12-phone is-4-mobile is-4-tablet is-4-desktop" v-show='!categShown' v-for='link in filterSubProd' v-if='getCurrentCategory === link.category' :key="link.id" :class="{current: subCat == link.subcategory }">
         <div class="card ">
           <div class="card-image">
             <figure class="image ">
@@ -64,7 +68,9 @@ import store from "../store/index.js";
 export default {
   name: "Products",
   data() {
-    return {};
+    return {
+      subCat: ""
+    };
   },
   mounted() {},
   computed: {
@@ -73,33 +79,42 @@ export default {
       getCurrentCategory: "getCurrentCategory",
       getCurrentSubCateg: "getCurrentSubCateg",
       categShown: "categShown",
-      getSubcateg: "getSubcateg"
-    })
+      getSubcategs: "getSubcategs",
+      cartItems: "cartProducts",
+      products: "allProducts",
+      initialSubCat: "initialSubCat"
+    }),
+    filterSubProd() {
+      return this.$store.getters.filterSubProd(this.subCat);
+    }
   },
   methods: {
     ...mapActions({
       addToCart: "addToCart",
-      decreaseItem: "decreaseItem",
-      filterProducts: "filterProducts"
+      decreaseItem: "decreaseItem"
     }),
+    filteredProducts(value) {
+      this.$store.commit("filteredProducts", value);
+    },
     selectCategory(value) {
-      this.$store.dispatch("updateSelectedCategory", value);
-      this.$store.dispatch("updateNav", value);
-      this.$store.dispatch("hideCateg");
+      this.$store.commit("updateSelectedCategory", value);
+      this.$store.commit("updateNav", value);
+      this.$store.commit("hideCateg");
     },
     selectSubCategory(value) {
-      this.$store.dispatch("updateSelectedSubCategory", value);
+      this.$store.commit("updateSelectedSubCateg", value);
     },
     initialSubCateg() {
       setTimeout(() => {
-        return this.$store.state.subCategories[0];
-      }, 150);
+        this.$store.commit("initialSubCateg");
+        this.subCat = this.initialSubCat;
+      }, 50);
     },
     hideCateg() {
-      this.$store.dispatch("hideCateg");
+      this.$store.commit("hideCateg");
     },
     updateNav(value) {
-      this.$store.dispatch("updateNav", value);
+      this.$store.commit("updateNav", value);
     },
     toggleDisplay(item) {
       item.showing = !item.showing;
@@ -108,12 +123,15 @@ export default {
       existingItem = this.products.filter(item => item.id == existingItem.id);
     },
     filterSubCat() {
-      this.$store.dispatch("getSubCategs");
-    },
-    filteredFinalProducts() {
-      return this.$store.getters.filterSubProd(
-        this.$store.state.selectedSubCategory
-      );
+      this.$store.commit("getSubCategs");
+    }
+  },
+  watch: {
+    getCurrentSubCateg(newval, old ) {
+      if (newval === '')
+      this.subCat = old
+      else
+      this.subCat = newval
     }
   }
 };

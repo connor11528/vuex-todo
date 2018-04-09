@@ -51,51 +51,55 @@
           </div>
         </div>
       
-        <div href="#"  v-for="category in getCategories" class="navbar-item has-dropdown" :key="category.id" > 
-          <a class='navbar-link' @click="selectCategory(category); activeMenu(); categHide(); filterProducts(category); filterSubCat() ; initialSubCateg(); " :class="{'is-gray is-active': selectedCategory == category  }" >
-            {{category}}
+        <div href="#"  v-for="category in menuItems" class="navbar-item has-dropdown" :key="category.id" > 
+          <a class='navbar-link' @click="selectCategory(category.name); activeMenu(); categHide(); filteredProducts(category.name); initialSubCateg()" :class="{'is-gray is-active': selectedCategory == category  }" >
+            {{category.name}}
           </a>
-          <!-- <div class='navbar-dropdown'  v-if='selectedCategory'>
-            <a class='navbar-item' v-for="subcategory in getSubcateg " :key="subcategory.id" @click="activeMenu(); " :class="{ 'is-gray is-active': selectedSubCategory == subcategory }">
+          <div class='navbar-dropdown'  v-if='selectedCategory'>
+            <a class='navbar-item' v-for="subcategory in menuItems.subcategory " :key="subcategory.id" @click="activeMenu(); categHide(); subCat = subcategory ; selectSubCategory(subcategory) ; " :class="{ 'is-gray is-active':  subCat == subcategory }">
               {{ subcategory}}
             </a>
-          </div>  -->
+          </div> 
         </div>
       </div>
     </div>
 	</nav>
-
-
 </header>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
-import store from "../store/index.js";
+import { mapGetters, mapActions, mapState, mapMutations } from "vuex";
 
 export default {
   data() {
-    return {};
+    return {
+      subCat: "",
+      menuItems: ""
+    };
   },
   created() {
     this.$store.dispatch("fetchProducts");
     setTimeout(() => {
-      this.$store.dispatch("getCategories");
+      this.$store.commit("getCategories");
     }, 150);
   },
   methods: {
-    ...mapActions({
-      filterProducts: "filterProducts"
-    }),
-    filterSubCat() {
-      this.$store.dispatch("getSubCategs");
+    initialSubCateg() {
+      setTimeout(() => {
+        this.$store.commit("initialSubCateg");
+        this.subCat = this.initialSubCat;
+      }, 50);
     },
+    filteredProducts(value) {
+      this.$store.commit("filteredProducts", value);
+    },
+
     changeCateg() {
-      this.$store.dispatch("showCateg");
-      this.$store.dispatch("emptySubCateg");
+      this.$store.commit("showCateg");
+      this.$store.commit("emptySubCateg");
     },
     categHide() {
-      this.$store.dispatch("hideCateg");
+      this.$store.commit("hideCateg");
     },
     activeMenu() {
       var $el = document.getElementById("burger");
@@ -103,24 +107,32 @@ export default {
       var $target = document.getElementById(target);
       $el.classList.toggle("is-active");
       $target.classList.toggle("is-active");
-      this.$store.dispatch('emptySubCateg')
+      this.$store.commit("emptySubCateg");
     },
     selectCategory(value) {
-      this.$store.dispatch("updateNav", value);
-      this.$store.dispatch("updateSelectedCategory", value);
+      this.$store.commit("updateNav", value);
+      this.$store.commit("updateSelectedCategory", value);
     },
-    initialSubCateg() {
-      return (this.$store.state.subCategories[0])
+
+    selectSubCategory(value) {
+      this.$store.commit("updateSelectedSubCateg", value);
+      this.subCat = this.selectedSubCategory;
     }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.menuItems = this.$store.getters.menuItems;
+    }, 50);
   },
   computed: {
     ...mapGetters({
       categShown: "categShown",
       products: "cartProducts",
       getCategories: "getCategories",
-      getSubcateg: "getSubcateg",
+      getSubcateg: "getSubcategs",
       selectedCategory: "getCurrentCategory",
-      selectedSubCategory: "getCurrentSubCateg"
+      selectedSubCategory: "getCurrentSubCateg",
+      initialSubCat: "initialSubCat"
     }),
 
     itemsInCart() {
@@ -131,6 +143,12 @@ export default {
       return this.products.reduce((total, p) => {
         return total + p.price * p.quantity;
       }, 0);
+    }
+  },
+  watch: {
+    selectedSubCategory(newval, old) {
+      if (newval === "") this.subCat = old;
+      else this.subCat = newval;
     }
   }
 };
