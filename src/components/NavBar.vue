@@ -88,7 +88,7 @@ export default {
       setTimeout(() => {
         this.$store.commit("initialSubCateg");
         this.subCat = this.initialSubCat;
-      }, 50);
+      }, 100);
     },
     filteredProducts(value) {
       this.$store.commit("filteredProducts", value);
@@ -122,7 +122,7 @@ export default {
   mounted() {
     setTimeout(() => {
       this.menuItems = this.$store.getters.menuItems;
-    }, 50);
+    }, 160);
   },
   computed: {
     ...mapGetters({

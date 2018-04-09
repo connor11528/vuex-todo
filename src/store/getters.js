@@ -4,14 +4,7 @@ const getters = {
 
   cartProducts: state => {
     return state.added.map(
-      ({
-        id,
-        quantity,
-        name,
-        price,
-        image,
-        description
-      }) => {
+      ({ id, quantity, name, price, image, description }) => {
         const product = state.all.find(p => p.id === id);
         return {
           name: product.product,
@@ -45,19 +38,19 @@ const getters = {
     }),
   initialSubCat: state => state.initialSubCat,
   menuItems: state => {
-    let menuItems = []
+    let menuItems = [];
     for (let i = 0; i < state.categories.length; i++) {
       menuItems[i] = {
         name: state.categories[i],
         subcategory: []
-      }
+      };
       for (let index = 0; index < state.all.length; index++) {
         if (state.all[index].category === menuItems[i].name) {
-          menuItems[i].subcategory.push(state.all[index].subcateg)
+          menuItems[i].subcategory.push(state.all[index].subcateg);
         }
       }
     }
-return menuItems
+    return menuItems;
   }
 };
 
