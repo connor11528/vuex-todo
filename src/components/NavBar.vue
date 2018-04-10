@@ -52,11 +52,11 @@
         </div>
       
         <div href="#"  v-for="category in menuItems" class="navbar-item has-dropdown" :key="category.id" > 
-          <a class='navbar-link' @click="selectCategory(category.name); activeMenu(); categHide(); filteredProducts(category.name); initialSubCateg()" :class="{'is-gray is-active': selectedCategory == category  }" >
+          <a class='navbar-link' @click="selectCategory(category.name); activeMenu(); categHide(); getSubCategories(); filteredProducts(category.name);initialSubCateg() " :class="{'is-gray is-active': selectedCategory == category  }" >
             {{category.name}}
           </a>
-          <div class='navbar-dropdown'  v-if='selectedCategory'>
-            <a class='navbar-item' v-for="subcategory in menuItems.subcategory " :key="subcategory.id" @click="activeMenu(); categHide(); subCat = subcategory ; selectSubCategory(subcategory) ; " :class="{ 'is-gray is-active':  subCat == subcategory }">
+          <div class='navbar-dropdown' >
+            <a class='navbar-item' v-for="subcategory in category.subcategory " :key="subcategory.id" @click="activeMenu(); selectCategory (category.name); selectSubCategory(subcategory); getSubCategories(); categHide(); subCat = subcategory ; filteredProducts(category.name);" :class="{ 'is-gray is-active':  subCat == subcategory }">
               {{ subcategory}}
             </a>
           </div> 
@@ -81,19 +81,24 @@ export default {
     this.$store.dispatch("fetchProducts");
     setTimeout(() => {
       this.$store.commit("getCategories");
-    }, 150);
+      console.log("geting getCategories");
+    }, 50);
   },
   methods: {
+    getSubCategories() {
+      this.$store.commit('getSubCategs')
+    },
     initialSubCateg() {
-      setTimeout(() => {
-        this.$store.commit("initialSubCateg");
-        this.subCat = this.initialSubCat;
-      }, 100);
+      this.$store.commit("initialSubCateg");
+      console.log("geting initialSubCateg");
+      this.subCat = this.initialSubCat;
     },
     filteredProducts(value) {
+      console.log("geting fitleredProd");
       this.$store.commit("filteredProducts", value);
-    },
 
+
+    },
     changeCateg() {
       this.$store.commit("showCateg");
       this.$store.commit("emptySubCateg");
@@ -110,11 +115,12 @@ export default {
       this.$store.commit("emptySubCateg");
     },
     selectCategory(value) {
+      console.log("this is the category");
       this.$store.commit("updateNav", value);
       this.$store.commit("updateSelectedCategory", value);
     },
-
     selectSubCategory(value) {
+      console.log("subcategories update", value);
       this.$store.commit("updateSelectedSubCateg", value);
       this.subCat = this.selectedSubCategory;
     }
@@ -122,14 +128,12 @@ export default {
   mounted() {
     setTimeout(() => {
       this.menuItems = this.$store.getters.menuItems;
-    }, 160);
+    }, 250);
   },
   computed: {
     ...mapGetters({
       categShown: "categShown",
       products: "cartProducts",
-      getCategories: "getCategories",
-      getSubcateg: "getSubcategs",
       selectedCategory: "getCurrentCategory",
       selectedSubCategory: "getCurrentSubCateg",
       initialSubCat: "initialSubCat"
