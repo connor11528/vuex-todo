@@ -43,20 +43,19 @@
         <div class="navbar-item">
           <div class="control">
             <div class='select'>
-              <select name="language-select" id="language-selector">
-                <option value="en">EN</option>
-                <option value="ar">AR</option>
+              <select name="language-select" id="language-selector" v-model.lazy='selectedOption' v-on:change='updateLanguage(selectedOption)'>
+                <option v-for='option in options' v-bind:value='option.value' :key="option.id">{{ option.language}}</option>
               </select>
             </div>
           </div>
         </div>
       
         <div href="#"  v-for="category in menuItems" class="navbar-item has-dropdown" :key="category.id" > 
-          <a class='navbar-link' @click="selectCategory(category.name); activeMenu(); categHide(); filteredProducts(category.name); getSubCategories(); initialSubCateg() ; " :class="{'is-gray is-active': selectedCategory == category || selectedCategory == category && subCat == subcategory }" >
+          <a class='navbar-link' @click="selectCategory(category.name); activeMenu(); categHide(); filteredProducts(category.name); getSubCategories(); initialSubCateg() ; " :class="{' is-active': selectedCategory == category }" >
             {{category.name}}
           </a>
           <div class='navbar-dropdown' >
-            <a class='navbar-item' v-for="subcategory in category.subcategory " :key="subcategory.id" @click="activeMenu(); selectCategory (category.name);selectSubCategory(subcategory); categHide(); filteredProducts(category.name); subCat = subcategory ;  getSubCategories();  " :class="{ 'is-gray is-active':  subCat == subcategory }">
+            <a class='navbar-item' v-for="subcategory in category.subcategory " :key="subcategory.id" @click="activeMenu(); selectCategory (category.name);selectSubCategory(subcategory); categHide(); filteredProducts(category.name); subCat = subcategory ;  getSubCategories();  " :class="{ ' is-active':  subCat == subcategory }">
               {{ subcategory}}
             </a>
           </div> 
@@ -74,20 +73,34 @@ export default {
   data() {
     return {
       subCat: "",
-      menuItems: ""
+      menuItems: "",
+      selectedOption: "ar",
+      options: [
+        {
+          language: "English",
+          value: "en"
+        },
+        {
+          language: "Arabic",
+          value: "ar"
+        }
+      ]
     };
   },
   created() {
-    this.$store.dispatch("fetchProducts");
+    this.$store.dispatch("fetchProducts", this.selectedOption);
     setTimeout(() => {
       this.$store.commit("getCategories");
       console.log("geting getCategories");
     }, 50);
   },
   methods: {
+    updateLanguage(value) {
+      this.$store.commit("updateLanguage", value);
+    },
     getSubCategories() {
-      this.$store.commit('getSubCategs')
-      console.log('getting new subcategs')
+      this.$store.commit("getSubCategs");
+      console.log("getting new subcategs");
     },
     initialSubCateg() {
       this.$store.commit("initialSubCateg");
@@ -97,8 +110,6 @@ export default {
     filteredProducts(value) {
       console.log("geting fitleredProd");
       this.$store.commit("filteredProducts", value);
-
-
     },
     changeCateg() {
       this.$store.commit("showCateg");
@@ -137,7 +148,8 @@ export default {
       products: "cartProducts",
       selectedCategory: "getCurrentCategory",
       selectedSubCategory: "getCurrentSubCateg",
-      initialSubCat: "initialSubCat"
+      initialSubCat: "initialSubCat",
+      currentLanguage: "currentLanguage"
     }),
 
     itemsInCart() {
@@ -154,6 +166,12 @@ export default {
     selectedSubCategory(newval, old) {
       if (newval === "") this.subCat = old;
       else this.subCat = newval;
+    },
+
+    currentLanguage(neval, oldval) {
+      if (this.$store.state.language != this.selectedOption)
+        console.log("changing language", this.selectedOption);
+      this.$store.dispatch("fetchProducts", neval);
     }
   }
 };

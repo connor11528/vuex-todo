@@ -21,7 +21,8 @@ const state = {
   selectedSubCategory: null,
   categories: [],
   subCategories: [],
-  initialSubCat: ''
+  initialSubCat: "",
+  language: "ar"
 };
 
 // one store for entire application

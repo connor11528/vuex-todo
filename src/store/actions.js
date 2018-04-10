@@ -1,17 +1,12 @@
 // actions
-
 const actions = {
-  addToCart({
-    commit
-  }, product) {
+  addToCart({ commit }, product) {
     commit("addToCart", {
       id: product.id
     });
   },
-  fetchProducts({
-    commit
-  }) {
-    fetch("http://localhost:3000/products")
+  fetchProducts({ commit }, language) {
+    fetch(`./${language}.json`)
       .then(res => res.json())
       .then(data => {
         commit("fetchProducts", data);
@@ -20,34 +15,25 @@ const actions = {
         console.log(error.statusText);
       });
   },
-  increaseItem({
-    commit
-  }, product) {
+  increaseItem({ commit }, product) {
     commit("increaseItem", {
       id: product.id
     });
   },
-  decreaseItem({
-    commit
-  }, product) {
+  decreaseItem({ commit }, product) {
     commit("decreaseItem", {
       id: product.id
     });
   },
-  resetStore({
-    commit
-  }, store) {
+  resetStore({ commit }, store) {
     commit("resetStore", store);
     commit("initialiseStore", store);
   },
-  removeItem({
-    commit
-  }, product) {
+  removeItem({ commit }, product) {
     commit("removeItem", {
       id: product.id
     });
-  },
-
+  }
 };
 
 export default actions;

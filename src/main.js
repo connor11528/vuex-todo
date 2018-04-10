@@ -25,7 +25,9 @@ const routes = [
 
 // Register routes
 const router = new VueRouter({
-  routes
+  routes,
+  saveScrollPosition: true,
+  history: true,
 });
 
 store.subscribe((mutation, state) => {

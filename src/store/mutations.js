@@ -1,19 +1,15 @@
 // mutations
 const version = 1;
 const mutations = {
-  removeItem(state, {
-    id
-  }) {
+  removeItem(state, { id }) {
     const record = state.added
-      .map(function (item) {
+      .map(function(item) {
         return item.id;
       })
       .indexOf(id);
     state.added.splice(record, 1);
   },
-  addToCart(state, {
-    id
-  }) {
+  addToCart(state, { id }) {
     const record = state.added.find(p => p.id === id);
     if (!record) {
       state.added.push({
@@ -27,26 +23,20 @@ const mutations = {
     }
   },
   fetchProducts(state, all) {
-    state.all = all;
+    state.all = all.products;
   },
-  increaseItem(state, {
-    id
-  }) {
+  increaseItem(state, { id }) {
     const record = state.added.find(p => p.id === id);
     record.quantity++;
   },
-  decreaseItem(state, {
-    id
-  }) {
+  decreaseItem(state, { id }) {
     const record = state.added.find(p => p.id === id);
     record.quantity--;
     if (record.quantity < 0) {
       record.quantity = 0;
     }
   },
-  resetStore({
-    commit
-  }, store) {
+  resetStore({ commit }, store) {
     state.version++;
     state.added = [];
   },
@@ -100,10 +90,10 @@ const mutations = {
     });
   },
   initialSubCateg: state => {
-    state.initialSubCat = state.selectedSubCategory = state.subCategories[0]
+    state.initialSubCat = state.selectedSubCategory = state.subCategories[0];
   },
-  
-
-
+  updateLanguage(state, value) {
+    state.language = value;
+  }
 };
 export default mutations;
