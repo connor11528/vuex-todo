@@ -52,11 +52,11 @@
         </div>
       
         <div href="#"  v-for="category in menuItems" class="navbar-item has-dropdown" :key="category.id" > 
-          <a class='navbar-link' @click="selectCategory(category.name); activeMenu(); categHide(); getSubCategories(); filteredProducts(category.name);initialSubCateg() " :class="{'is-gray is-active': selectedCategory == category  }" >
+          <a class='navbar-link' @click="selectCategory(category.name); activeMenu(); categHide(); getSubCategories(); filteredProducts(category.name);initialSubCateg() " :class="{'is-gray is-active': selectedCategory == category || selectedCategory == category && subCat == subcategory }" >
             {{category.name}}
           </a>
           <div class='navbar-dropdown' >
-            <a class='navbar-item' v-for="subcategory in category.subcategory " :key="subcategory.id" @click="activeMenu(); selectCategory (category.name); selectSubCategory(subcategory); getSubCategories(); categHide(); subCat = subcategory ; filteredProducts(category.name);" :class="{ 'is-gray is-active':  subCat == subcategory }">
+            <a class='navbar-item' v-for="subcategory in category.subcategory " :key="subcategory.id" @click="activeMenu(); selectCategory (category.name);selectSubCategory(subcategory); categHide(); filteredProducts(category.name); subCat = subcategory ;  getSubCategories();  " :class="{ 'is-gray is-active':  subCat == subcategory }">
               {{ subcategory}}
             </a>
           </div> 
@@ -87,6 +87,7 @@ export default {
   methods: {
     getSubCategories() {
       this.$store.commit('getSubCategs')
+      console.log('getting new subcategs')
     },
     initialSubCateg() {
       this.$store.commit("initialSubCateg");
