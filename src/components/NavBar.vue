@@ -52,7 +52,7 @@
         </div>
       
         <div href="#"  v-for="category in menuItems" class="navbar-item has-dropdown" :key="category.id" > 
-          <a class='navbar-link' @click="selectCategory(category.name); activeMenu(); categHide(); getSubCategories(); filteredProducts(category.name);initialSubCateg() " :class="{'is-gray is-active': selectedCategory == category || selectedCategory == category && subCat == subcategory }" >
+          <a class='navbar-link' @click="selectCategory(category.name); activeMenu(); categHide(); filteredProducts(category.name); getSubCategories(); initialSubCateg() ; " :class="{'is-gray is-active': selectedCategory == category || selectedCategory == category && subCat == subcategory }" >
             {{category.name}}
           </a>
           <div class='navbar-dropdown' >
